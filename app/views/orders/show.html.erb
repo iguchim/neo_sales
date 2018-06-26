@@ -1,0 +1,78 @@
+<h2>出張指示</h2>
+<% status = order_status(@order.id) %>
+<div class="container">
+<div class="row">
+
+<div class="col-sm-6">
+
+  <div class="col-sm-12">
+    <% if @order.place.blank? %>
+      <p class="col-sm-4">場所： ---</p>
+    <% else %>
+      <p class="col-sm-4">場所：<%=@order.place %></p>
+    <% end %>
+  </div>
+  <div class="col-sm-12">
+    <% if @order.start.blank? %>
+      <p class="col-sm-8">期間： ---</p>
+    <% else %>
+      <p class="col-sm-8">期間： <%=@order.start.strftime('%Y/%m/%d') %> 〜 <%=@order.end.strftime('%Y/%m/%d') %></p>
+    <% end %>
+  </div>
+  <div class="col-sm-12">
+    <p class="col-sm-6">営業： <%=user_name(@order.user_id) %></p>
+  </div>
+
+</div><!--col-sm-6-->
+
+<div class="col-sm-6">
+
+  <div class="col-sm-12">
+    <p class="col-sm-6">指示日： <%=@order.order_date.strftime('%Y/%m/%d') %></p>
+  </div>
+    
+  <div class="col-sm-12">
+    <p class="col-sm-4">状態： <%= status[0] %></p>
+  </div>
+</div>
+
+<div class="col-sm-12">
+  <div class="col-sm-12">
+    <p>訪問先：</p>
+    <% if @order.visit.blank? %>
+      <p>---<p>
+    <% else %>
+      <p><%= @order.visit %></p>
+    <% end %>
+
+    <p>面談者：</p>
+    <% if @order.personnel.blank? %>
+      <p>---<p>
+    <% else %>
+      <p><%= @order.personnel %></p>
+    <% end %>
+  </div>
+
+  <div class="col-sm-12">
+    <p>指示内容：</p>
+    <p><%= @order.purpose %></p>
+
+    <p>特記事項：</p>
+    <% if @order.notes.blank? %>
+      <p>---<p>
+    <% else %>
+      <p><%= @order.notes %></p>
+    <% end %>
+  </div>
+</div>
+
+</div>
+</div>
+
+<%= link_to '戻る', orders_path, class: 'btn btn-primary' %>
+<% if current_user.id == @order.user_id && status[0] == '未' %>
+  <%= link_to '出張申請作成', new_request_path(order_id: @order.id), class: 'btn btn-primary' %>
+<% end %>
+<% if current_user.admin %>
+  <%= link_to '編集', edit_order_path(@order), class: 'btn btn-primary' %>
+<% end %>

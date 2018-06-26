@@ -1,0 +1,34 @@
+Start server golbally:
+For rails 5 no need to do rails server --bind=0.0.0.0
+-----
+nested attributes:
+class RequestItem < ApplicationRecord
+  belongs_to :request, required: false # This is work-around for rails 5
+  # without this, save error occured!
+
+-----
+Making user with console
+User.create!(:name => "", :email => "", :admin => true/false, :password => "", :password_confirmation => "")
+password >= 6chars
+
+User.create!(:name => "山田", :email => "yamada@test.com", :admin => false, :password => "yamada123", :password_confirmation => "yamada123")
+
+User.create!(:name => "鈴木", :email => "suzuki@test.com", :admin => false, :password => "suzuki123", :password_confirmation => "suzuki123")
+
+User.create!(:name => "村田", :email => "murata@test.com", :admin => false, :password => "murata123", :password_confirmation => "murata123")
+
+-----
+Comfirmation pop up twice
+Delete //= require jquery_ujs from application.js
+It is the same as //= require rails-ujs
+
+-----
+To Do List
+o 
+-----
+
+Production:
+
+bundle exec rake assets:precompile RAILS_ENV=production
+bundle exec rake db:migrate RAILS_ENV=production
+bundle exec rails s -e production

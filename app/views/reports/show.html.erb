@@ -1,0 +1,92 @@
+<h2>営業出張報告</h2>
+<div class="container">
+<div class="row">
+
+<div class="col-sm-6">
+
+  <div class="col-sm-12">
+    <p class="col-sm-4">方面：<%=@report.region %></p>
+  </div>
+  <div class="col-sm-12">
+    <p class="col-sm-8">期間：<%=@report.start.strftime('%Y/%m/%d') %> 〜 <%=@report.end.strftime('%Y/%m/%d') %></p>
+  </div>
+  <div class="col-sm-12">
+    <p class="col-sm-6">営業：<%=@report.name %></p>
+  </div>
+
+</div><!--col-sm-6-->
+
+<div class="col-sm-6">
+
+  <div class="col-sm-12">
+    <p class="col-sm-6">報告日：<%=@report.rep_date.strftime('%Y/%m/%d') %></p>
+  </div>
+    
+  <div class="col-sm-12">
+    <% if @report.auth_id.nil? %>
+      <p class="col-sm-4">承認：---</p>
+    <% else %>
+      <p class="col-sm-4">承認：<%= user_name(@report.auth_id) %></p>
+    <% end %>
+  </div>
+
+  <div class="col-sm-12">
+    <p class="col-sm-4">状態：<%= @report.state %></p>
+  </div>
+  </div>
+
+</div><!--col-sm-6-->
+
+<table class="table table-striped">
+    <thead>
+      <tr>
+        <th>地域</th>
+        <th>訪問先</th>
+        <th>面談者</th>
+        <th>報告</th>
+        <th>特記事項</th>
+        <th>コメント</th>
+      </tr>
+    </thead>
+  
+    <tbody>
+      <% for item in @report_items %>
+      <tr>
+        <td class="col-sm-1"><%= simple_format(item.place) %></td>
+        <td class="col-sm-2"><%= simple_format(item.visit) %></td>
+        <td class="col-sm-1"><%= simple_format(item.personnel) %></td>
+        <td class="col-sm-2"><%= simple_format(item.information) %></td>
+        <td class="col-sm-3"><%= simple_format(item.notes) %></td>
+        <td class="col-sm-3"><%= simple_format(item.comment) %></td>
+      </tr>
+      <% end %>
+    </tbody>
+    
+  </table>
+
+  <%= link_to '戻る', request_path(@report.request_id), class: 'btn btn-primary' %>
+
+  <% if (@report.user_id == current_user.id && !@report.auth_id) || current_user.admin %>
+    <%= link_to '編集', edit_report_path(@report), class: 'btn btn-primary' %>
+  <% end %>
+
+  <% if @report.auth_id.nil? && @report.user_id == current_user.id %>
+    <% if @report.state =="申請" %>
+      <%= link_to '下書', rep_state_path(id: @report.id), class: 'btn btn-primary' %>
+    <% else %>
+      <%= link_to '申請', rep_state_path(id: @report.id), class: 'btn btn-primary' %>
+    <% end %>
+  <% end %>
+
+  <% if current_user.admin && @report.state == "申請" %>
+    <% if @report.auth_id %>
+      <%= link_to '未承認', auth_rep_path(id: @report.id), class: 'btn btn-primary' %>
+    <% else %>
+      <%= link_to '承認', auth_rep_path(id: @report.id), class: 'btn btn-primary' %>
+    <% end %>
+  <% end %>
+
+  <%= link_to 'PDF', pdf_format_path(id: @report.id, format: "pdf"), target: :_new, class: 'btn btn-primary' %>
+
+</div><!--row-->
+</div><!--container-->

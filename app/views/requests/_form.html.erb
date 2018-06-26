@@ -1,0 +1,117 @@
+<h2>営業出張申請</h2>
+
+<%= form_for(@request, url: path, method: method) do |f| %>
+
+<% if (method == :post || method == :put) && @request.order_id %>
+  <%= f.hidden_field :order_id, :value => @request.order_id %>
+<% end %>
+
+<% if @request.errors.any? %>
+  <div id="error_explanation" class="alert alert-danger">
+    <ul>
+      <% @request.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+    </ul>
+  </div>
+<% end %>
+
+<div class="container">
+<div class="row">
+
+<div class="col-sm-6">
+
+  <div class="form-group">
+    <div class="col-sm-12">
+    <label class="text-right bottom-text col-sm-2 control-label" for="">方面</label>
+    <div class="col-sm-4">
+      <%= f.text_field :region, class: 'form-control' %>
+    </div>
+  </div>
+  </div>
+
+  <div class="form-group">
+    <div class="col-sm-12">
+      <label class="text-right col-sm-2 control-label" for="">期間</label>
+    <div class="col-sm-4">
+      <%= f.text_field :start, :value => (f.object.start.strftime('%Y/%m/%d/%H/%M') unless f.object.start.nil?), class: 'date-picker form-control' %>
+    </div>
+    <label class="col-sm-1 control-label" for="">:</label>
+    <div class="col-sm-4">
+      <%= f.text_field :end, :value => (f.object.end.strftime('%Y/%m/%d/%H/%M') unless f.object.end.nil?), class: 'date-picker form-control' %>
+      </div>
+    </div>
+  </div>
+
+</div><!-- class="col-sm-6" -->
+
+<div class="col-sm-6">
+
+  <div class="form-group">
+    <div class="col-sm-12">
+    <label class="text-right col-sm-3 col-sm-offset-5 control-label" for="">申請日</label>
+    <div class="col-sm-4">
+      <%= f.text_field :req_date,  :value => (f.object.req_date.strftime('%Y/%m/%d/%H/%M') unless f.object.req_date.nil?), class: 'date-picker form-control' %>
+    </div>
+    <label class="text-right col-sm-2 col-sm-offset-6 control-label" for="">営業</label>
+    <div class="col-sm-4 aline-center">
+      <% if method == :put %>
+        <%= @request.user.name%><!-- ONLY FOR TIME BEEING!!!! -->
+      <% else %>
+        <%= current_user.name%>
+      <% end %>
+
+    </div>
+    </div>
+  </div>
+  </div>
+
+</div><!-- class="col-sm-6" -->
+
+
+<div class="col-sm-12">
+<% if current_user.id == @request.user_id || method == :post %>
+<div class="text-right">
+  <%= link_to_add_association '項目追加', f, :request_items, class: 'btn btn-success',
+  data: {association_insertion_node: '#item-association-insertion-point',
+        assoiation_insertion_method: 'append'}
+  %>
+<% end %>
+</div>
+
+<table class="table table-list">
+<thead>
+  <tr>
+    <th>地域</th>
+    <th>訪問先</th>
+    <th>面談者</th>
+    <th>目的</th>
+    <th>特記事項</th>
+    <th>コメント</th>
+  </tr>
+</thead>
+
+<tbody id='item-association-insertion-point'>
+<div class="form-group">
+<%= f.fields_for :request_items do |item| %>
+  <%= render 'request_item_fields', f: item %>
+<% end %>
+</div>
+</tbody>
+</table>
+</div>
+
+<div class="col-sm-6 btn-toolbar">
+<% if @request.id.nil? %>
+  <%= link_to 'キャンセル', requests_path, class: 'col-sm-2 btn btn-primary' %>
+<% else %>
+  <%= link_to 'キャンセル', request_path(@request.id), class: 'col-sm-2 btn btn-primary' %>
+<% end %>
+<%= f.submit '登録', class: 'col-sm-2 btn btn-primary' %><!-- too big when make it smaller -->
+</div>
+
+
+</div>
+</div>
+
+<% end %>

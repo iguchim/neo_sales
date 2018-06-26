@@ -1,0 +1,96 @@
+<h2>営業出張申請</h2>
+<div class="container">
+<div class="row">
+
+<div class="col-sm-6">
+
+  <div class="col-sm-12">
+    <p class="col-sm-4">方面：<%=@request.region %></p>
+  </div>
+  <div class="col-sm-12">
+    <p class="col-sm-8">期間：<%=@request.start.strftime('%Y/%m/%d') %> 〜 <%=@request.end.strftime('%Y/%m/%d') %></p>
+  </div>
+  <div class="col-sm-12">
+    <p class="col-sm-6">営業：<%=@request.name %></p>
+  </div>
+
+</div><!--col-sm-6-->
+
+<div class="col-sm-6">
+
+  <div class="col-sm-12">
+    <p class="col-sm-6">申請日：<%=@request.req_date.strftime('%Y/%m/%d') %></p>
+  </div>
+    
+  <div class="col-sm-12">
+    <% if @request.auth_id.nil? %>
+      <p class="col-sm-4">承認：---</p>
+    <% else %>
+      <p class="col-sm-4">承認：<%= user_name(@request.auth_id) %></p>
+    <% end %>
+  </div>
+
+  <div class="col-sm-12">
+    <p class="col-sm-4">状態：<%= @request.state %></p>
+  </div>
+</div>
+
+</div><!--col-sm-6-->
+
+<table class="table table-striped">
+    <thead>
+      <tr>
+        <th>地域</th>
+        <th>訪問先</th>
+        <th>面談者</th>
+        <th>目的</th>
+        <th>特記事項</th>
+        <th>コメント</th>
+      </tr>
+    </thead>
+  
+    <tbody>
+      <% for item in @request_items %>
+      <tr>
+        <td class="col-sm-1"><%= simple_format(item.place) %></td>
+        <td class="col-sm-2"><%= simple_format(item.visit) %></td>
+        <td class="col-sm-1"><%= simple_format(item.personnel) %></td>
+        <td class="col-sm-2"><%= simple_format(item.purpose) %></td>
+        <td class="col-sm-3"><%= simple_format(item.notes) %></td>
+        <td class="col-sm-3"><%= simple_format(item.comment) %></td>
+      </tr>
+      <% end %>
+    </tbody>
+    
+  </table>
+
+  <%= link_to '申請リスト', requests_path, class: 'btn btn-primary' %>
+  <%= link_to 'カレンダー', schedules_path, class: 'btn btn-primary' %>
+  <% if (@request.user_id == current_user.id && !@request.auth_id) || current_user.admin %>
+    <%= link_to '編集', edit_request_path(@request), class: 'btn btn-primary' %>
+  <% end %>
+
+  <% if @request.auth_id.nil? && @request.user_id == current_user.id %>
+    <% if @request.state =="申請" %>
+      <%= link_to '下書', req_state_path(id: @request.id), class: 'btn btn-primary' %>
+    <% else %>
+      <%= link_to '申請', req_state_path(id: @request.id), class: 'btn btn-primary' %>
+    <% end %>
+  <% end %>
+
+  <% if !@request.auth_id.nil? %>
+    <% if current_user.id == @request.user_id || @request.report %>
+      <%= link_to '報告', report_path(:request_id => @request.id), class: 'btn btn-primary' %>
+    <% end %>
+  <% end %>
+
+  <% if current_user.admin && @request.state == "申請" %>
+    <% if @request.auth_id %>
+      <%= link_to '未承認', auth_req_path(id: @request.id), class: 'btn btn-primary' %>
+    <% else %>
+      <%= link_to '承認', auth_req_path(id: @request.id), class: 'btn btn-primary' %>
+    <% end %>
+  <% end %>
+
+</div><!--row-->
+</div><!--container-->

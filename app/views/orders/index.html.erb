@@ -1,0 +1,61 @@
+<div class="container">
+  <h2>出張指示リスト</h2>
+
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th>項番</th>
+        <th>営業</th>
+        <th>指示日</th>
+        <th>出張開始日</th>
+        <th>出張終了日</th>
+        <th>場所</th>
+        <th>指示内容</th>
+        <th>状態</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @orders.each do |order| %>
+        <% status = order_status(order.id) %>
+        <tr>
+          <td><%= link_to("#{order.id}", order_path(order)) %></td>
+          <td><%= user_name(order.user_id) %></td>
+          <td><%= order.order_date.strftime('%Y/%m/%d') %></td>
+          <% if order.start.blank? %>
+            <td>---</td>
+          <% else %>
+            <td><%= order.start.strftime('%Y/%m/%d') %></td>
+          <% end %>
+          <% if order.end.blank? %>
+            <td>---</td>
+          <% else %>
+            <td><%= order.end.strftime('%Y/%m/%d') %></td>
+          <% end %>
+          <% if order.place.blank? %>
+            <td>---</td>
+          <% else %>
+            <td><%= order.place %></td>
+          <% end %>
+          <td><%= order.purpose %></td>
+          <% if status[0] == '未' %>
+            <td><%= status[0] %></td>
+          <% elsif status[0] == '申請' %>
+            <td><%= link_to '申請', request_path(status[1]) %></td>
+          <% else %>
+            <td><%= link_to '報告', report_path(status[2], request_id: status[1]) %></td>
+          <% end %>
+
+          <% if current_user.admin && status[0] == '未' %>
+            <td><%= link_to '削除', order_path(order.id), method: :delete, data: {confirm: '本当に削除しますか？'}, class: 'btn btn-danger' %></td>
+          <% else %>
+            <td></td>
+          <% end %>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+  <%= link_to '戻る', requests_path, class: 'btn btn-primary' %>
+  <% if current_user.admin %>
+    <%= link_to '新規作成', new_order_path, class: 'btn btn-primary' %>
+  <% end %>
+</div>

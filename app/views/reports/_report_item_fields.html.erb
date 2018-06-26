@@ -1,0 +1,29 @@
+<tr class= "nested-fields">
+  <td class="col-sm-1">
+  <%= f.text_area :place, class: 'form-control' %>
+  </td>
+  <td class="col-sm-2">
+  <%= f.text_area :visit, class: 'form-control' %>
+  </td>
+  <td class="col-sm-2">
+  <%= f.text_area :personnel, class: 'form-control' %>
+  </td>
+  <td class="col-sm-3">
+  <%= f.text_area :information, class: 'form-control' %>
+  </td>
+  <td class="col-sm-2">
+  <%= f.text_area :notes, class: 'form-control' %>
+  </td>
+  <td class="col-sm-2">
+  <% if current_user.admin %>
+    <%= f.text_area :comment, class: 'form-control' %>
+  <% else %>
+    <%= f.text_area :comment, :readonly => true, class: 'form-control' %>
+  <% end %>
+  </td>
+  <td class="col-sm-1">
+  <% if current_user.id == f.object.report.user_id %>
+    <%= link_to_remove_association '削除', f, data: {confirm: '本当に削除しますか？'}, class: 'btn btn-danger' %>
+  <% end %>
+  </td>
+</tr>

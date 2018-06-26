@@ -1,0 +1,29 @@
+<p id="notice"><%= notice %></p>
+
+<h1>Reference Users</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Refer</th>
+      <th>Referred</th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @reference_users.each do |reference_user| %>
+      <tr>
+        <td><%= reference_user.refer_id %></td>
+        <td><%= reference_user.referred_id %></td>
+        <td><%= link_to 'Show', reference_user %></td>
+        <td><%= link_to 'Edit', edit_reference_user_path(reference_user) %></td>
+        <td><%= link_to 'Destroy', reference_user, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Reference User', new_reference_user_path %>

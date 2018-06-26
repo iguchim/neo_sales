@@ -1,0 +1,50 @@
+fullcalendar
+add event table
+
+app/assets/javascripts:
+
+add full_calendar.js
+
+
+app/controllers:
+
+add events_controller.rb
+    visitors_controller.rb
+
+app/models:
+
+add event.rb
+
+app/views:
+create.js.erb
+_edit.html.erb
+_event.json.jbuilder
+index.json.jbuilder
+new.js.erb
+destroy.js.erb
+edit.js.erb
+_form.html.erb
+_new.html.erb
+update.js.erb
+
+re-install fullcalendar, moment, daterangepick form https://github.com/driftingruby/042-fullcalendar
+copy relevant files
+
+application.js:
+//= require rails-ujs
+//= require jquery
+//= require bootstrap
+//= require turbolinks
+//= require cocoon
+//= require moment <--- added
+//= require fullcalendar <--- added
+//= require fullcalendar/lang/ja <--- added
+//= require daterangepicker <--- added
+//= require_tree .
+
+application.css:
+*= require fullcalendar
+ *= require daterangepicker
+ *= require_tree .
+ *= require_self
+ */

@@ -1,0 +1,41 @@
+# And be sure to use new-style password hashing:
+#   http://dev.mysql.com/doc/refman/5.0/en/old-client.html
+#
+# this is fake line for git
+default: &default
+  adapter: mysql2
+  encoding: utf8
+  pool: 5
+  username: root
+  password: ne0ne039
+  socket: /var/run/mysqld/mysqld.sock
+
+development:
+  <<: *default
+  database: sales_reports_development
+  username: sales_reports
+  password: cliche
+
+# Warning: The database defined as "test" will be erased and
+# re-generated from your development database when you run "rake".
+# Do not set this db to the same as development or production.
+test:
+  <<: *default
+  database: sales_report_test
+
+# production:
+#   <<: *default
+#   database: sales_reports_production
+#   username: sales_reports
+#   password: <%= ENV['DATABASE_PASSWORD'] %>
+
+production:
+  <<: *default
+  database: sales_reports_production
+  username: sales_reports
+  #password: <%= ENV['DATABASE_PASSWORD'] %>
+  password: cliche
+  # for heroku
+  # database: heroku_d84f57b1f504f27
+  # username: b088c0964851d9
+  # password: <%= ENV['DATABASE_PASSWORD'] %>

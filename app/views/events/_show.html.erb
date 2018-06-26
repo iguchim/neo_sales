@@ -1,0 +1,16 @@
+<div class="modal fade" id="show_event">
+  <div class="modal-dialog modal-sm">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+          <h4 class="modal-title">カレンダーイベント</h4>
+        </div>
+        <div class="modal-body">
+          [タイトル]<br><%= @event.title %><br>
+          [期間]<br><%= @event.start.strftime('%Y/%m/%d %H:%M') %>
+          〜
+          <%= @event.end.strftime('%Y/%m/%d %H:%M') %>
+        </div>
+      </div>
+  </div>
+</div>

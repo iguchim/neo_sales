@@ -1,0 +1,14 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Refer:</strong>
+  <%= @reference_user.refer_id %>
+</p>
+
+<p>
+  <strong>Referred:</strong>
+  <%= @reference_user.referred_id %>
+</p>
+
+<%= link_to 'Edit', edit_reference_user_path(@reference_user) %> |
+<%= link_to 'Back', reference_users_path %>

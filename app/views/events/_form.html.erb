@@ -1,0 +1,25 @@
+<%= simple_form_for @event, remote: true do |f| %>
+  <div class="form-inputs">
+    <%= f.input :title, label: 'タイトル' %>
+    <%= f.input :date_range, label: '期間', input_html: { class: "form-control input-sm date-range-picker" } %>
+    <%= f.input_field :start, as: :hidden, value: Date.today, class: 'form-control input-sm start_hidden' %>
+    <%= f.input_field :end, as: :hidden, value: Date.today, class: 'form-control input-sm end_hidden' %>
+    <% if params[:action] == "new" %>
+      <%=f.hidden_field :color, value: current_user.color %>
+      <%=f.hidden_field :user_id, value: current_user.id %>
+    <% end %>
+  </div>
+
+  <div class="form-actions">
+    <% if params[:action] == "new" ||
+      params[:action] == "edit" && current_user.id == @event.user_id %>
+      <%= f.button :button, '保存', class: 'btn btn-primary' %>
+      <%= link_to '削除', 
+                  event, 
+                  method: :delete, 
+                  class: 'btn btn-danger', 
+                  data: { confirm: '本当に宜しいですか?' }, 
+                  remote: true unless @event.new_record? %>
+    <% end %>
+  </div>
+<% end %>

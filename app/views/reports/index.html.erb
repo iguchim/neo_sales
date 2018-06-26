@@ -1,0 +1,37 @@
+<div class="container">
+  <h2>出張報告リスト</h2>           
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th>項番</th>
+        <th>営業</th>
+        <th>報告日</th>
+        <th>出張開始日</th>
+        <th>出張終了日</th>
+        <th>方面</th>
+        <th>承認者</th>
+        <th>状態</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @reports.each do |report| %>
+        <tr>
+          <td><%= link_to("#{report.id}", report_path(report)) %></td>
+          <td><%= report.name %></td>
+          <td><%= report.rep_date.strftime('%Y/%m/%d') %></td>
+          <td><%= report.start.strftime('%Y/%m/%d') %></td>
+          <td><%= report.end.strftime('%Y/%m/%d') %></td>
+          <td><%= report.region %></td>
+          <% if report.auth_id.nil? %>
+            <td>---</td>
+          <% else %>
+            <td><%= user_name(report.auth_id) %></td>
+          <% end %>
+          <td><%= report.state %></td>
+          
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+  <!-- <%= link_to '新規', new_request_path, class: 'btn btn-primary' %> -->
+</div>
