@@ -11,11 +11,11 @@ Making user with console
 User.create!(:name => "", :email => "", :admin => true/false, :password => "", :password_confirmation => "")
 password >= 6chars
 
-User.create!(:name => "山田", :email => "yamada@test.com", :admin => false, :password => "yamada123", :password_confirmation => "yamada123")
+User.create!(:name => "山田", :email => "i@iguchi.biz", :admin => false, :password => "yamada123", :password_confirmation => "yamada123")
 
 User.create!(:name => "鈴木", :email => "suzuki@test.com", :admin => false, :password => "suzuki123", :password_confirmation => "suzuki123")
 
-User.create!(:name => "村田", :email => "murata@test.com", :admin => false, :password => "murata123", :password_confirmation => "murata123")
+User.create!(:name => "村田", :email => "masa@iguchi.biz", :admin => true, :password => "murata123", :password_confirmation => "murata123")
 
 -----
 Comfirmation pop up twice

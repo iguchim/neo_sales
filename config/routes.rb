@@ -5,7 +5,8 @@ Rails.application.routes.draw do
   get 'sessions/new'
 
   #root 'static_pages#home' # => root_path
-  root 'requests#index'
+  #root 'requests#index'
+  root 'daily_reports#index'
   get  '/help',    to: 'static_pages#help'
   get  '/about',   to: 'static_pages#about'
   get  '/contact', to: 'static_pages#contact'
@@ -23,6 +24,9 @@ Rails.application.routes.draw do
   get '/rep_state', to: 'reports#state'
 
   get 'pdf_format' => 'pdf_formats#show'
+
+  get '/daily_rep_state', to: 'daily_reports#state'
+  get '/daily_auth_rep', to: 'daily_reports#auth'
   
   # resources :users do
   #   member do
@@ -58,6 +62,10 @@ Rails.application.routes.draw do
   get '/schedules', to: 'schedules#index'
 
   get '/seluser', to: 'events#seluser'
+
+  resources :daily_reports do
+    resources :daily_report_details
+  end
 
   resources :account_activations, only: [:edit]
   resources :password_resets,     only: [:new, :create, :edit, :update]

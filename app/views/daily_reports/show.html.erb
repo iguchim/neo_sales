@@ -1,0 +1,87 @@
+<h2>営業日報</h2>
+<div class="container">
+<div class="row">
+
+<div class="col-sm-6">
+
+  <div class="col-sm-12">
+    <p class="col-sm-4">営業：<%= user_name(@daily_report.user_id) %></p>
+  </div>
+  <div class="col-sm-12">
+    <p class="col-sm-6">報告日：<%=@daily_report.report_date.strftime('%Y/%m/%d') %></p>
+  </div>
+
+</div><!--col-sm-6-->
+
+<div class="col-sm-6">
+    
+  <div class="col-sm-12">
+    <% if @daily_report.auth_id.nil? %>
+      <p class="col-sm-4">確認：---</p>
+    <% else %>
+      <p class="col-sm-4">確認：<%= user_name(@daily_report.auth_id) %></p>
+    <% end %>
+  </div>
+
+  <div class="col-sm-12">
+    <p class="col-sm-4">状態：<%= @daily_report.state %></p>
+  </div>
+  </div>
+
+</div><!--col-sm-6-->
+
+<table class="table table-striped">
+    <thead>
+      <tr>
+        <th>顧客</th>
+        <th>顧客担当</th>
+        <th>内容</th>
+        <th>特記事項</th>
+        <th>コメント</th>
+        <th>区分</th>
+      </tr>
+    </thead>
+  
+    <tbody>
+      <% for item in @daily_report_details %>
+      <tr>
+        <td class="col-sm-1"><%= simple_format(item.customer) %></td>
+        <td class="col-sm-2"><%= simple_format(item.personnel) %></td>
+        <td class="col-sm-2"><%= simple_format(item.contents) %></td>
+        <td class="col-sm-3"><%= simple_format(item.notes) %></td>
+        <td class="col-sm-3"><%= simple_format(item.comment) %></td>
+        <td class="col-sm-3"><%= simple_format(category_name(item.category_id)) %></td>
+      </tr>
+      <% end %>
+    </tbody>
+    
+  </table>
+
+  <% if from_daily_report_index? %>
+    <%= link_to '戻る', url_for(:back), class: 'btn btn-primary' %>
+  <% else %>
+    <%= link_to '日報リスト', daily_reports_path, class: 'btn btn-primary' %>
+  <% end %>
+
+  <% if (@daily_report.user_id == current_user.id && !@daily_report.auth_id) || current_user.admin %>
+    <%= link_to '編集', edit_daily_report_path(@daily_report), class: 'btn btn-primary' %>
+  <% end %>
+
+  <% if @daily_report.auth_id.nil? && @daily_report.user_id == current_user.id %>
+    <% if @daily_report.state =="申請" %>
+      <%= link_to '下書', daily_rep_state_path(id: @daily_report.id), class: 'btn btn-primary' %>
+    <% else %>
+      <%= link_to '申請', daily_rep_state_path(id: @daily_report.id), class: 'btn btn-primary' %>
+    <% end %>
+  <% end %>
+
+  <% if current_user.admin && @daily_report.state == "申請" %>
+    <% if @daily_report.auth_id %>
+      <%= link_to '未確認', daily_auth_rep_path(id: @daily_report.id), class: 'btn btn-primary' %>
+    <% else %>
+      <%= link_to '確認', daily_auth_rep_path(id: @daily_report.id), class: 'btn btn-primary' %>
+    <% end %>
+  <% end %>
+
+</div><!--row-->
+</div><!--container-->

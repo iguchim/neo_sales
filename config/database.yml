@@ -12,8 +12,8 @@ default: &default
 
 development:
   <<: *default
-  database: sales_reports_development
-  username: sales_reports
+  database: neo_reports_development
+  username: neo_reports
   password: cliche
 
 # Warning: The database defined as "test" will be erased and
@@ -21,7 +21,7 @@ development:
 # Do not set this db to the same as development or production.
 test:
   <<: *default
-  database: sales_report_test
+  database: neo_report_test
 
 # production:
 #   <<: *default
@@ -31,8 +31,8 @@ test:
 
 production:
   <<: *default
-  database: sales_reports_production
-  username: sales_reports
+  database: neo_reports_production
+  username: neo_reports
   #password: <%= ENV['DATABASE_PASSWORD'] %>
   password: cliche
   # for heroku

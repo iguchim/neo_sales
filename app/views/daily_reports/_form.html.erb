@@ -1,0 +1,88 @@
+<h2>営業日報</h2>
+
+<%= form_for(@daily_report, url: path, method: method) do |f| %>
+
+<div class="container">
+<div class="row">
+
+<div class="col-sm-6">
+
+  <div class="form-group">
+    <div class="col-sm-12">
+    <label class="text-right bottom-text col-sm-2 control-label" for="">営業</label>
+    <div class="col-sm-4 aline-center">
+      <% if method == :put %>
+        <%= user_name(@daily_report.user_id) %><!-- ONLY FOR TIME BEEING!!!! -->
+      <% else %>
+        <%= current_user.name%>
+      <% end %>
+
+    </div>
+  </div>
+  </div>
+
+</div><!-- class="col-sm-6" -->
+
+<div class="col-sm-6">
+
+  <div class="form-group">
+    <div class="col-sm-12">
+    <label class="text-right col-sm-3 col-sm-offset-5 control-label" for="">報告日</label>
+    <div class="col-sm-4">
+      <%= f.text_field :report_date,  :value => (f.object.report_date.strftime('%Y/%m/%d/%H/%M') unless f.object.report_date.nil?), class: 'date-picker form-control' %>
+    </div>
+    </div>
+  </div>
+
+</div><!-- class="col-sm-6" -->
+
+</div>
+</div>
+
+<div class="col-sm-12">
+<% if current_user.id == @daily_report.user_id || method == :post %>
+<div class="text-right">
+  <%= link_to_add_association '項目追加', f, :daily_report_details, class: 'btn btn-success',
+  data: {association_insertion_node: '#item-association-insertion-point',
+        assoiation_insertion_method: 'append'}
+  %>
+<% end %>
+</div>
+
+<table class="table table-list">
+<thead>
+  <tr>
+    <th>顧客</th>
+    <th>顧客担当</th>
+    <th>内容</th>
+    <th>特記事項</th>
+    <th>コメント</th>
+    <th>区分</th>
+    <th></th>
+  </tr>
+</thead>
+
+<tbody id='item-association-insertion-point'>
+<div class="form-group">
+<%= f.fields_for :daily_report_details do |item| %>
+  <%= render 'daily_report_detail_fields', f: item %>
+<% end %>
+</div>
+</tbody>
+</table>
+</div>
+
+<div class="col-sm-6 btn-toolbar">
+<% if @daily_report.id.nil? %>
+  <%= link_to 'キャンセル', daily_reports_path, class: 'col-sm-2 btn btn-primary' %>
+<% else %>
+  <%= link_to 'キャンセル', daily_report_path(@daily_report), class: 'col-sm-2 btn btn-primary' %>
+<% end %>
+<%= f.submit '登録', class: 'col-sm-2 btn btn-primary'%>
+</div>
+
+</div>
+</div>
+
+
+<% end %>

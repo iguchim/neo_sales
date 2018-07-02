@@ -4,19 +4,58 @@ class UserMailer < ApplicationMailer
   def notice_from_user
 
     @user = User.find(params[:user_id])
-    auth_mail = User.find_by(admin: true).email
+    #auth_mail = User.find_by(admin: true).email
     @url = params[:url]
-    mail(to: auth_mail, subject:'承認要求です。')
+    auths = User.where(admin: true)
+    emails = []
+    auths.each do |auth|
+      emails << auth.email
+    end
+    #mail(to: auth_mail, subject:'承認要求です。')
+    mail(to: emails, subject:'承認要求です。')
+
     
+  end
+
+  def notice_from_daily_user
+
+    @user = User.find(params[:user_id])
+    @url = params[:url]
+    auths = User.where(admin: true)
+    emails = []
+    auths.each do |auth|
+      emails << auth.email
+    end
+    mail(to: emails, subject:'確認要求です。')
+ 
   end
 
   def decline_from_user
 
     @user = User.find(params[:user_id])
-    auth_mail = User.find_by(admin: true).email
+    #auth_mail = User.find_by(admin: true).email
     @url = params[:url]
-    mail(to: auth_mail, subject:'承認要求の取消です。')
+    auths = User.where(admin: true)
+    emails = []
+    auths.each do |auth|
+      emails << auth.email
+    end
+    #mail(to: auth_mail, subject:'承認要求の取消です。')
+    mail(to: emails, subject:'承認要求の取消です。')
     
+  end
+
+  def decline_from_daily_user
+
+    @user = User.find(params[:user_id])
+    @url = params[:url]
+    auths = User.where(admin: true)
+    emails = []
+    auths.each do |auth|
+      emails << auth.email
+    end
+    mail(to: emails, subject:'確認要求の取消です。')
+
   end
 
   #-----------------------------------
@@ -30,7 +69,25 @@ class UserMailer < ApplicationMailer
     
   end
 
+  def notice_from_daily_auth
+
+    @auth = User.find(params[:auth_id])
+    user_mail = User.find(params[:user_id]).email
+    @url = params[:url]
+    mail(to: user_mail, subject:'確認されました。')
+    
+  end
+
   def decline_from_auth
+
+    @auth = User.find(params[:auth_id])
+    user_mail = User.find(params[:user_id]).email
+    @url = params[:url]
+    mail(to: user_mail, subject:'取消れました。')
+    
+  end
+
+  def decline_from_daily_auth
 
     @auth = User.find(params[:auth_id])
     user_mail = User.find(params[:user_id]).email

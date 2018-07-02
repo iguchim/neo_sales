@@ -1,0 +1,45 @@
+<div class="container">
+  <h2>日報リスト</h2>
+  <%= form_tag daily_reports_path, method: 'get' do %>
+    <div class="form-inline">
+      <%= text_field_tag :search, params[:item], value: @daily_search_params[:search] ,class: "form-group form-control" %>
+
+      <%= select_tag :user_id, content_tag(:option,'名前',:value=>"")+options_from_collection_for_select(User.all, 'id', 'name', @daily_search_params[:user_id].to_i), class: "form-group form-control" %>
+
+      <%= select_tag :category_id, content_tag(:option, '区分',:value=>"")+options_from_collection_for_select(Category.all, 'id', 'name', @daily_search_params[:category_id].to_i), class: "form-group form-control" %>
+
+      <%= select_tag :auth_state,  options_for_select({"全て" => "", "未確認" => "未確認", "確認" => "確認"}, @daily_search_params[:auth_state]), class: "form-group form-control" %>
+
+      <%= submit_tag "検索", class: "form-group form-control btn btn-primary" %>
+    
+    </div>
+    <% end %>        
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th>項番</th>
+        <th>営業</th>
+        <th>報告日</th>
+        <th>確認者</th>
+        <th>状態</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @daily_reports.each do |report| %>
+        <tr>
+          <td><%= link_to("#{report.id}", daily_report_path(report)) %></td>
+          <td><%= user_name(report.user_id) %></td>
+          <td><%= report.report_date.strftime('%Y/%m/%d') %></td>
+          <% if report.auth_id.nil? %>
+            <td>---</td>
+          <% else %>
+            <td><%= user_name(report.auth_id) %></td>
+          <% end %>
+          <td><%= report.state %></td>
+          
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+  <%= link_to '新規', new_daily_report_path, class: 'btn btn-primary' %>
+</div>

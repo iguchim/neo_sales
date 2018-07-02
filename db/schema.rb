@@ -10,9 +10,34 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180523022744) do
+ActiveRecord::Schema.define(version: 20180628002207) do
 
-  create_table "events", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+  create_table "categories", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+    t.string "name"
+  end
+
+  create_table "daily_report_details", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+    t.bigint "daily_report_id"
+    t.string "customer"
+    t.string "personnel"
+    t.text "contents"
+    t.text "notes"
+    t.text "comment"
+    t.bigint "category_id"
+    t.index ["category_id"], name: "index_daily_report_details_on_category_id"
+    t.index ["daily_report_id"], name: "index_daily_report_details_on_daily_report_id"
+  end
+
+  create_table "daily_reports", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+    t.bigint "user_id"
+    t.datetime "report_date"
+    t.string "state"
+    t.bigint "auth_id"
+    t.index ["auth_id"], name: "index_daily_reports_on_auth_id"
+    t.index ["user_id"], name: "index_daily_reports_on_user_id"
+  end
+
+  create_table "events", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=latin1" do |t|
     t.string "title"
     t.datetime "start"
     t.datetime "end"
@@ -50,7 +75,7 @@ ActiveRecord::Schema.define(version: 20180523022744) do
     t.index ["user_id"], name: "index_orders_on_user_id"
   end
 
-  create_table "reference_users", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+  create_table "reference_users", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=latin1" do |t|
     t.bigint "refer_id"
     t.bigint "referred_id"
     t.datetime "created_at", null: false
@@ -134,6 +159,7 @@ ActiveRecord::Schema.define(version: 20180523022744) do
     t.index ["email"], name: "index_users_on_email", unique: true
   end
 
+  add_foreign_key "daily_reports", "users", column: "auth_id"
   add_foreign_key "events", "users"
   add_foreign_key "microposts", "users"
   add_foreign_key "report_items", "reports"
