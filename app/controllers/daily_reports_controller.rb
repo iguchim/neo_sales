@@ -70,7 +70,6 @@ class DailyReportsController < ApplicationController
   def update
     if @daily_report.update_attributes(daily_report_params)
       flash[:success] = "日報を更新しました。"
-      #redirect_to requests_path
       redirect_to daily_report_path(@daily_report)
     else
       flash[:danger] = "日報を更新出来ませんでした。"
@@ -79,7 +78,7 @@ class DailyReportsController < ApplicationController
   end
 
   def edit
-    @daily_report = DailyReport.find(params[:id])
+    #@daily_report = DailyReport.find(params[:id])
     if !@daily_report.auth_id.nil? && !current_user.admin
       flash[:danger] = "日報が確認された為編集出来ません。"
       redirect_to daily_report_path(@daily_report)

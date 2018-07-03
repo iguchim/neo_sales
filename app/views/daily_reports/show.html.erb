@@ -57,11 +57,13 @@
     
   </table>
 
+ 
   <% if from_daily_report_index? %>
     <%= link_to '戻る', url_for(:back), class: 'btn btn-primary' %>
   <% else %>
     <%= link_to '日報リスト', daily_reports_path, class: 'btn btn-primary' %>
   <% end %>
+
 
   <% if (@daily_report.user_id == current_user.id && !@daily_report.auth_id) || current_user.admin %>
     <%= link_to '編集', edit_daily_report_path(@daily_report), class: 'btn btn-primary' %>
