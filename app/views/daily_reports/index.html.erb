@@ -48,7 +48,5 @@
       <% end %>
     </tbody>
   </table>
-  <% if !current_user.admin %>
-    <%= link_to '新規', new_daily_report_path, class: 'btn btn-primary' %>
-  <% end %>
+  <%= link_to '新規', new_daily_report_path, class: 'btn btn-primary' %>
 </div>
