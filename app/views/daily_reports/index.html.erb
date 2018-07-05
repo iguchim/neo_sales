@@ -24,6 +24,7 @@
         <th>実施日</th>
         <th>確認者</th>
         <th>状態</th>
+        <th></th>
       </tr>
     </thead>
     <tbody>
@@ -38,7 +39,11 @@
             <td><%= user_name(report.auth_id) %></td>
           <% end %>
           <td><%= report.state %></td>
-          
+          <% if no_details?(report.id, report.user_id) %>
+            <td><%= link_to '削除', daily_report_path(report), method: :delete, data: {confirm: '本当に削除しますか？'}, class: 'btn btn-danger' %>
+          <% else %>
+            <td></td>
+          <% end %>
         </tr>
       <% end %>
     </tbody>

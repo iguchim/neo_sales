@@ -1,6 +1,6 @@
 
 class DailyReportsController < ApplicationController
-  before_action :logged_in_user, only: [:new, :create, :edit, :update, :index, :show]
+  before_action :logged_in_user, only: [:new, :create, :edit, :update, :index, :show, :destory]
   before_action :set_daily_report, only: [:edit, :update]
 
   def index
@@ -92,18 +92,22 @@ class DailyReportsController < ApplicationController
     end
   end
 
-  def destory
+  def destroy
     daily_report = DailyReport.find(params[:id])
-    if daily_report.auth_id.nil? && daily_report.user_id == current_user.id
-      daily_report.daily_report_details.each do |item|
-        item.destroy
-      end
-      daily_report.destroy
-      flash[:success] = "日報申請を削除しました。"
-    else
-      flash[:danger] = "日報申請が確認された為削除出来ません。"
-    end
-    redirect_to daily_report_url
+
+    # if daily_report.auth_id.nil? && daily_report.user_id == current_user.id
+    #   daily_report.daily_report_details.each do |item|
+    #     item.destroy
+    #   end
+    #   daily_report.destroy
+    #   flash[:success] = "日報申請を削除しました。"
+    # else
+    #   flash[:danger] = "日報申請が確認された為削除出来ません。"
+    # end
+
+    daily_report.destroy
+
+    redirect_to daily_reports_url
   end
 
   def auth
