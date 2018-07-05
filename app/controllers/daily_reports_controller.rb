@@ -39,7 +39,7 @@ class DailyReportsController < ApplicationController
     if @daily_search_params[:user_id].nil? && @daily_search_params[:auth_state].nil? && 
       @daily_search_params[:search].nil? && @daily_search_params[:category_id].nil? &&
       @daily_search_params[:action_id].nil?
-      @daily_reports = DailyReport.order("report_date")
+      @daily_reports = DailyReport.order("report_date DESC")
     else
       @daily_reports = search_results(@daily_search_params)
     end
@@ -148,7 +148,7 @@ class DailyReportsController < ApplicationController
 
   def search_results(items)
 
-    reports = DailyReport.order("report_date")
+    reports = DailyReport.order("report_date DESC")
 
     
     reports = search_string(reports, items[:search])
