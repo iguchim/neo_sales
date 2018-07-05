@@ -72,13 +72,13 @@ Rails.application.configure do
   config.action_mailer.delivery_method = :smtp
   host = 'suwako-resort.info'
   #host = 'coedo-sample-app.herokuapp.com'
-  config.action_mailer.default_url_options = { host: 'suwako-resort.info' }
+  config.action_mailer.default_url_options = { host: '192.168.1.80' }
   ActionMailer::Base.smtp_settings = {
-    address: '140.227.20.60', 
+    address: 'iguchim.sakura.ne.jp', 
     port: 587, 
-    domain: '140.227.20.60', 
-    user_name: 'iguchi@suwako-resort.co.jp', 
-    password: '4ciq+uEW',
+    domain: 'iguchim.sakura.ne.jp', 
+    user_name: 'neo@iguchi.biz', 
+    password: 'ubQ-LnK-R2W-NDn',
     authentication: 'plain', 
     enable_starttls_auto: false
   }

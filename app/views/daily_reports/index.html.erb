@@ -6,9 +6,11 @@
 
       <%= select_tag :user_id, content_tag(:option,'名前',:value=>"")+options_from_collection_for_select(User.all, 'id', 'name', @daily_search_params[:user_id].to_i), class: "form-group form-control" %>
 
-      <%= select_tag :category_id, content_tag(:option, '区分',:value=>"")+options_from_collection_for_select(Category.all, 'id', 'name', @daily_search_params[:category_id].to_i), class: "form-group form-control" %>
+      <%= select_tag :category_id, content_tag(:option, '内容区分',:value=>"")+options_from_collection_for_select(Category.all, 'id', 'name', @daily_search_params[:category_id].to_i), class: "form-group form-control" %>
 
-      <%= select_tag :auth_state,  options_for_select({"全て" => "", "未確認" => "未確認", "確認" => "確認"}, @daily_search_params[:auth_state]), class: "form-group form-control" %>
+      <%= select_tag :action_id, content_tag(:option, '行動区分',:value=>"")+options_from_collection_for_select(Action.all, 'id', 'name', @daily_search_params[:action_id].to_i), class: "form-group form-control" %>
+
+      <%= select_tag :auth_state,  options_for_select({"状態" => "", "未確認" => "未確認", "確認" => "確認"}, @daily_search_params[:auth_state]), class: "form-group form-control" %>
 
       <%= submit_tag "検索", class: "form-group form-control btn btn-primary" %>
     
@@ -41,5 +43,7 @@
       <% end %>
     </tbody>
   </table>
-  <%= link_to '新規', new_daily_report_path, class: 'btn btn-primary' %>
+  <% if !current_user.admin %>
+    <%= link_to '新規', new_daily_report_path, class: 'btn btn-primary' %>
+  <% end %>
 </div>

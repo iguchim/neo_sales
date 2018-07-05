@@ -1,5 +1,5 @@
 class UserMailer < ApplicationMailer
-  default from: 'iguchi@suwako-resort.co.jp'
+  default from: 'neo@iguchi.biz'
 
   def notice_from_user
 

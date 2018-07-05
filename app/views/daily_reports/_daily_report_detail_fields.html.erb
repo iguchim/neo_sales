@@ -1,5 +1,5 @@
 <tr class= "nested-fields">
-  <td class="col-sm-2">
+  <td class="col-sm-1">
   <%= f.text_area :customer, class: 'form-control' %><!-- col... not working -->
   </td>
   <td class="col-sm-1">
@@ -20,6 +20,9 @@
   </td>
   <td class="col-sm-2">
   <%= f.collection_select :category_id, Category.all, :id, :name, :prompt => true, class: 'form-control' %>
+  </td>
+  <td class="col-sm-1">
+  <%= f.collection_select :action_id, Action.all, :id, :name, :prompt => true, class: 'form-control' %>
   </td>
   <td class="col-sm-1">
   <% if f.object.id.nil? || current_user.id == f.object.daily_report.user_id %>

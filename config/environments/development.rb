@@ -30,15 +30,15 @@ Rails.application.configure do
   # config.action_mailer.raise_delivery_errors = true
   # config.action_mailer.delivery_method = :test
   # host = 'railstutorial-yasulab.c9users.io'
-  config.action_mailer.default_url_options = { host: '127.0.0.1' }
+  config.action_mailer.default_url_options = { host: 'localhost' }
 
   config.action_mailer.delivery_method = :smtp
   config.action_mailer.smtp_settings = { 
-    address: '140.227.20.60', 
+    address: 'iguchim.sakura.ne.jp', 
     port: 587, 
-    domain: '140.227.20.60', 
-    user_name: 'iguchi@suwako-resort.co.jp', 
-    password: '4ciq+uEW',
+    domain: 'iguchim.sakura.ne.jp', 
+    user_name: 'neo@iguchi.biz', 
+    password: 'ubQ-LnK-R2W-NDn',
     authentication: 'plain', 
     enable_starttls_auto: false
   }

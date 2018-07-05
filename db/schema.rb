@@ -10,7 +10,11 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180628002207) do
+ActiveRecord::Schema.define(version: 20180704061758) do
+
+  create_table "actions", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+    t.string "name"
+  end
 
   create_table "categories", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.string "name"
@@ -24,6 +28,8 @@ ActiveRecord::Schema.define(version: 20180628002207) do
     t.text "notes"
     t.text "comment"
     t.bigint "category_id"
+    t.bigint "action_id"
+    t.index ["action_id"], name: "index_daily_report_details_on_action_id"
     t.index ["category_id"], name: "index_daily_report_details_on_category_id"
     t.index ["daily_report_id"], name: "index_daily_report_details_on_daily_report_id"
   end

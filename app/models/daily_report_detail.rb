@@ -1,12 +1,14 @@
 class DailyReportDetail < ApplicationRecord
-  REGISTRABLE_ATTRIBUTES = %i(id daily_report_id customer personnel contents notes comment category_id _destroy)
-  belongs_to :daily_report
-  belongs_to :category
+  REGISTRABLE_ATTRIBUTES = %i(id daily_report_id customer personnel contents notes comment category_id action_id _destroy)
+  belongs_to :daily_report, required: false
+  #belongs_to :category
 
-  validates :daily_report_id,  presence: true
+  #validates :daily_report_id,  presence: true
   validates :customer,  presence: true
   validates :personnel,  presence: true
   validates :contents,  presence: true
+  validates :category_id,  presence: true
+  validates :action_id,  presence: true
 
   def self.search(item)
     if !item.blank?

@@ -1,7 +1,7 @@
 module ApplicationHelper
   # ページごとの完全なタイトルを返します。
   def full_title(page_title = '')
-    base_title = "ネオテック営業"
+    base_title = "ネオテック営業部"
     if page_title.empty?
       base_title
     else
@@ -33,14 +33,16 @@ module ApplicationHelper
   end
 
   def from_daily_report_index?
+    url = request.referrer
+    if url.nil?
+        return false
+    end
 
-    params = Rails.application.routes.recognize_path(request.referrer)
-    if params[:controller] == "daily_reports" && params[:action] == "index"
+    if url.include?("daily_reports?")
       true
     else
       false
     end
-
   end
 
 end

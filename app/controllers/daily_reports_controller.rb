@@ -18,6 +18,12 @@ class DailyReportsController < ApplicationController
       @daily_search_params[:category_id] = nil
     end 
 
+    if !params[:action_id].blank?
+      @daily_search_params[:action_id] = params[:action_id].to_i
+    else
+      @daily_search_params[:action_id] = nil
+    end 
+
     if !params[:auth_state].blank?
       @daily_search_params[:auth_state] = params[:auth_state]
     else
@@ -31,7 +37,8 @@ class DailyReportsController < ApplicationController
     end
 
     if @daily_search_params[:user_id].nil? && @daily_search_params[:auth_state].nil? && 
-      @daily_search_params[:search].nil? && @daily_search_params[:category_id].nil?
+      @daily_search_params[:search].nil? && @daily_search_params[:category_id].nil? &&
+      @daily_search_params[:action_id].nil?
       @daily_reports = DailyReport.order("report_date")
     else
       @daily_reports = search_results(@daily_search_params)
@@ -152,7 +159,9 @@ class DailyReportsController < ApplicationController
       reports = reports.where('user_id = ?', items[:user_id])
     end
 
-    reports = search_category(reports, items[:category_id])
+    reports = search_category(reports, 'category_id = ?', items[:category_id])
+
+    reports = search_category(reports, 'action_id = ?', items[:action_id])
 
   end
 
@@ -176,7 +185,7 @@ class DailyReportsController < ApplicationController
     reports.where('id IN (?)', res_ids)
   end
 
-  def search_category(reports, category_id)
+  def search_category(reports, category_str, category_id)
 
     if category_id.blank?
       return reports
@@ -185,7 +194,7 @@ class DailyReportsController < ApplicationController
     res_ids = []
 
     reports.each do |report|
-      details = report.daily_report_details.where('category_id = ?', category_id)
+      details = report.daily_report_details.where(category_str, category_id)
       details.each do |elem|
         res_ids << elem.daily_report_id
       end

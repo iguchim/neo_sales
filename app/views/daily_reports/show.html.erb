@@ -37,7 +37,8 @@
         <th>内容</th>
         <th>特記事項</th>
         <th>コメント</th>
-        <th>区分</th>
+        <th>内容区分</th>
+        <th>行動区分</th>
       </tr>
     </thead>
   
@@ -45,11 +46,12 @@
       <% for item in @daily_report_details %>
       <tr>
         <td class="col-sm-1"><%= simple_format(item.customer) %></td>
-        <td class="col-sm-2"><%= simple_format(item.personnel) %></td>
-        <td class="col-sm-2"><%= simple_format(item.contents) %></td>
-        <td class="col-sm-3"><%= simple_format(item.notes) %></td>
-        <td class="col-sm-3"><%= simple_format(item.comment) %></td>
-        <td class="col-sm-3"><%= simple_format(category_name(item.category_id)) %></td>
+        <td class="col-sm-1"><%= simple_format(item.personnel) %></td>
+        <td class="col-sm-3"><%= simple_format(item.contents) %></td>
+        <td class="col-sm-2"><%= simple_format(item.notes) %></td>
+        <td class="col-sm-1"><%= simple_format(item.comment) %></td>
+        <td class="col-sm-1"><%= simple_format(category_name(item.category_id)) %></td>
+        <td class="col-sm-1"><%= simple_format(action_name(item.action_id)) %></td>
       </tr>
       <% end %>
     </tbody>
