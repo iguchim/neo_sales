@@ -73,6 +73,7 @@
   <% if @daily_report.auth_id.nil? && @daily_report.user_id == current_user.id %>
     <% if @daily_report.state =="申請" %>
       <%= link_to '下書', daily_rep_state_path(id: @daily_report.id), class: 'btn btn-primary' %>
+      <%= link_to '返答完了', daily_rep_from_path(id: @daily_report.id), class: 'btn btn-primary' %>
     <% else %>
       <%= link_to '申請', daily_rep_state_path(id: @daily_report.id), class: 'btn btn-primary' %>
     <% end %>
@@ -82,6 +83,7 @@
     <% if @daily_report.auth_id %>
       <%= link_to '未確認', daily_auth_rep_path(id: @daily_report.id), class: 'btn btn-primary' %>
     <% else %>
+      <%= link_to '返答要求', daily_req_to_path(id: @daily_report.id), class: 'btn btn-primary' %>
       <%= link_to '確認', daily_auth_rep_path(id: @daily_report.id), class: 'btn btn-primary' %>
     <% end %>
   <% end %>

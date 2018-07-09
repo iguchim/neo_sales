@@ -27,6 +27,9 @@ Rails.application.routes.draw do
 
   get '/daily_rep_state', to: 'daily_reports#state'
   get '/daily_auth_rep', to: 'daily_reports#auth'
+
+  get '/daily_req_to', to: 'daily_reports#req_to'
+  get '/daily_rep_from', to: 'daily_reports#rep_from'
   
   # resources :users do
   #   member do

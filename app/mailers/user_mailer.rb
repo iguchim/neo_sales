@@ -110,6 +110,25 @@ class UserMailer < ApplicationMailer
   end
 
   #-------------------------------------------------------
+  def request_to_daily_user
+    @auth = User.find(params[:auth_id])
+    user_mail = User.find(params[:user_id]).email
+    @url = params[:url]
+    mail(to: user_mail, subject: 'コメントへの返答要求です。')
+  end
+
+  def reply_from_daily_user
+    @user = User.find(params[:user_id])
+    auths = User.where(admin: true)
+    emails = []
+    auths.each do |auth|
+      emails << auth.email
+    end
+
+    @url = params[:url]
+    mail(to: emails, subject: 'コメントへの返答です。')
+  end
+  #-------------------------------------------------------
   def account_activation(user)
     @user = user
     mail to: user.email # => mail object

@@ -129,6 +129,26 @@ class DailyReportsController < ApplicationController
     redirect_to daily_report_path(params[:id])
   end
 
+  def req_to
+    if !current_user.admin
+      flash[:danger] = "管理者ではないので、要求出来ません。"
+    else
+      @daily_report = DailyReport.find(params[:id])
+      UserMailer.with(user_id: @daily_report.user_id, auth_id: current_user.id,
+            url: daily_report_url(@daily_report)).request_to_daily_user.deliver_now
+      flash[:success] = "返答要求メールを送信しました。"
+    end
+    redirect_to daily_report_path(params[:id])
+  end
+
+  def rep_from
+    @daily_report = DailyReport.find(params[:id])
+    UserMailer.with(user_id: @daily_report.user_id, 
+          url: daily_report_url(@daily_report)).reply_from_daily_user.deliver_now
+    flash[:success] = "返答返答完了メールを送信しました。"
+    redirect_to daily_report_path(params[:id])
+  end
+
   def state
     @daily_report = DailyReport.find(params[:id])
     if @daily_report.auth_id.nil? && @daily_report.user_id == current_user.id
