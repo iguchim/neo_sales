@@ -1,5 +1,9 @@
 
 class DailyReportsController < ApplicationController
+
+  include ActionsHelper
+  include CategoriesHelper
+
   before_action :logged_in_user, only: [:new, :create, :edit, :update, :index, :show, :destory]
   before_action :set_daily_report, only: [:edit, :update]
 
@@ -168,7 +172,83 @@ class DailyReportsController < ApplicationController
     redirect_to daily_report_path(params[:id])
   end
 
+  def chart
+    @action_data = get_action_data
+    @contents_data = get_contents_data
+  end
+
   private
+
+  def get_action_data
+    action_data = {}
+    User.all.each do |user|
+      if user.admin
+        next
+      end
+      user_data = get_user_action_data(user.id)
+      action_data[user.name] = user_data
+    end
+    action_data
+  end
+
+  def get_user_action_data(user_id)
+    act_data = DailyReportDetail.joins(:daily_report)
+                        .where('daily_reports.user_id = ?', user_id)
+                        .group(:action_id)
+                        .order('count_all')
+                        .count
+    make_action_data(act_data)                       
+  end
+
+  def make_action_data(actions)
+    action_data = {}
+    Action.all.each do |act|
+      val = actions[act.id]
+      if val.nil?
+        val = 0
+      end
+      name = action_name_str(act.id)
+      action_data[name] = val
+    end
+    action_data
+  end
+
+
+  def get_contents_data
+    contents_data = {}
+    User.all.each do |user|
+      if user.admin
+        next
+      end
+      user_data = get_user_contents_data(user.id)
+      contents_data[user.name] = user_data
+    end
+    contents_data
+  end
+
+  def get_user_contents_data(user_id)
+    cont_data = DailyReportDetail.joins(:daily_report)
+                        .where('daily_reports.user_id = ?', user_id)
+                        .group(:category_id)
+                        .order('count_all')
+                        .count
+    make_content_data(cont_data)
+  end
+
+  def make_content_data(contents)
+    contents_data = {}
+    Category.all.each do |cont|
+      val = contents[cont.id]
+      if val.nil?
+        val = 0
+      end
+      name = category_name(cont.id)
+      contents_data[name] = val
+    end
+    contents_data
+
+  end
+
 
   def search_results(items)
 

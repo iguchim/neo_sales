@@ -51,7 +51,7 @@
         <td class="col-sm-2"><%= simple_format(item.notes) %></td>
         <td class="col-sm-1"><%= simple_format(item.comment) %></td>
         <td class="col-sm-1"><%= simple_format(category_name(item.category_id)) %></td>
-        <td class="col-sm-1"><%= simple_format(action_name(item.action_id)) %></td>
+        <td class="col-sm-1"><%= simple_format(action_name_str(item.action_id)) %></td>
       </tr>
       <% end %>
     </tbody>

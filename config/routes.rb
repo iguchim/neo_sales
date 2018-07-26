@@ -31,6 +31,8 @@ Rails.application.routes.draw do
   get '/daily_req_to', to: 'daily_reports#req_to'
   get '/daily_rep_from', to: 'daily_reports#rep_from'
   
+  get '/chart', to: 'daily_reports#chart'
+  
   # resources :users do
   #   member do
   #     # /users/:id/ ...
