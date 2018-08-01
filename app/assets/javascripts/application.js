@@ -19,4 +19,5 @@
 //= require fullcalendar
 //= require fullcalendar/lang/ja
 //= require daterangepicker
+//= require chartkick
 //= require_tree .

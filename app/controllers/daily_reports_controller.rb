@@ -3,6 +3,7 @@ class DailyReportsController < ApplicationController
 
   include ActionsHelper
   include CategoriesHelper
+  include UsersHelper
 
   before_action :logged_in_user, only: [:new, :create, :edit, :update, :index, :show, :destory]
   before_action :set_daily_report, only: [:edit, :update]
@@ -173,11 +174,111 @@ class DailyReportsController < ApplicationController
   end
 
   def chart
+    @chart_params = {}
+    cat_id = nil
+    act_id = nil
+    if !params[:category_id].blank?
+      cat_id = params[:category_id].to_i
+      @chart_params[:category_id] = cat_id
+    else
+      @chart_params[:category_id] = nil
+    end 
+
+    if !params[:action_id].blank?
+      act_id = params[:action_id].to_i
+      @chart_params[:action_id] = act_id
+    else
+      @chart_params[:action_id] = nil
+    end 
+
+    @col_data = get_col_data(cat_id, act_id)
+
     @action_data = get_action_data
     @contents_data = get_contents_data
+
   end
 
   private
+
+  def get_col_data(cat_id, act_id)
+
+    if cat_id.nil? && act_id.nil?
+      where_str = nil
+      group_ids = [:user_id]
+    elsif !cat_id.nil? && act_id.nil?
+      where_str = "category_id = #{cat_id}"
+      group_ids = [:user_id, :action_id]
+    elsif cat_id.nil? && !act_id.nil?
+      where_str = "action_id = #{act_id}"
+      group_ids = [:user_id, :category_id]
+    else
+      where_str = "action_id = #{act_id} AND category_id = #{cat_id}"
+      group_ids = [:user_id]
+    end
+
+    raw_data = DailyReportDetail.joins(:daily_report)
+                        .where(where_str)
+                        .group(group_ids)
+                        .order('count_all')
+                        .count
+
+    make_col_data(raw_data, group_ids)
+
+  end
+
+  def make_col_data(raw_data, group_ids)
+    if group_ids.count == 1
+      make_single_col_data(raw_data)
+    else
+      make_multi_col_data(raw_data, group_ids[1])
+    end
+  end
+
+  def make_single_col_data(raw_data)
+    col_data = {}
+    User.all.each do |user|
+      if user.admin
+        next
+      end
+      val = raw_data[user.id]
+      if val.nil?
+        val = 0
+      end
+      col_data[user.name] = val
+    end
+    col_data
+  end
+
+  def make_multi_col_data(raw_data, group_id)
+    col_data =[]
+    i = 0
+    if group_id == :action_id
+      items = Action.all
+    else
+      items = Category.all
+    end
+
+    items.each do |item|
+      col_data << {}
+      col_data[i][:name] = item.name
+      col_data[i][:data] = []
+      User.all.each do |user|
+        if user.admin
+          next
+        end
+        d = []
+        d << user.name
+        if raw_data[[user.id, item.id]].nil?
+          d << 0
+        else
+          d << raw_data[[user.id, item.id]]
+        end
+        col_data[i][:data] << d
+      end
+      i += 1
+    end
+    col_data
+  end
 
   def get_action_data
     action_data = {}
@@ -323,7 +424,7 @@ class DailyReportsController < ApplicationController
       end
     end
 
-    DailyReport.where('id IN (?)', res_ids)
+    reports.where('id IN (?)', res_ids)
 
   end
 

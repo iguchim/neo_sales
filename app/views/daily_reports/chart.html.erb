@@ -1,6 +1,26 @@
 <div class="container">
 <div class="row">
 
+<div class="col-sm-12 center">
+  <%= form_tag chart_path, method: 'get' do %>
+    <div class="form-inline">
+      <%= select_tag :category_id, content_tag(:option, '内容区分',:value=>"")+options_from_collection_for_select(Category.all, 'id', 'name', @chart_params[:category_id].to_i), class: "form-group form-control" %>
+
+      <%= select_tag :action_id, content_tag(:option, '行動区分',:value=>"")+options_from_collection_for_select(Action.all, 'id', 'name', @chart_params[:action_id].to_i), class: "form-group form-control" %>
+
+      <%= submit_tag "実行", class: "form-group form-control btn btn-primary" %>
+    </div>
+  <% end %>
+</div>
+
+<div class="col-sm-12">
+  <% if params[:action_id].blank? || params[:category_id].blank? %>
+    <%= column_chart @col_data, :library => {:isStacked => true} %>
+  <% else %>
+    <%= column_chart @col_data %>
+  <% end %>
+</div>
+
 <div class="col-sm-6">
   <div class="col-sm-6">
     <h4 class="text-primary text-center">行動区分</h4>
@@ -34,6 +54,8 @@
     <% end %>
   </div>
 </div>
+
+
 
 </div><!--row-->
 </div><!--container-->

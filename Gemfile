@@ -36,7 +36,7 @@ gem 'prawn-table'
 gem 'rails-i18n'
 
 gem 'chartkick'
-gem 'chartable'
+#gem 'chartable'
 
 group :development, :test do
   #gem 'sqlite3', '1.3.13'
