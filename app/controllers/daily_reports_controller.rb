@@ -41,6 +41,12 @@ class DailyReportsController < ApplicationController
       @daily_search_params[:search] = nil
     end
 
+    if !params[:disp_state].blank?
+      @daily_search_params[:disp_state] = params[:disp_state]
+    else
+      @daily_search_params[:disp_state] = nil
+    end
+
     if @daily_search_params[:user_id].nil? && @daily_search_params[:auth_state].nil? && 
       @daily_search_params[:search].nil? && @daily_search_params[:category_id].nil? &&
       @daily_search_params[:action_id].nil?
@@ -48,9 +54,13 @@ class DailyReportsController < ApplicationController
     else
       @daily_reports = search_results(@daily_search_params)
     end
-  end
 
-  
+    if @daily_search_params[:disp_state] == "詳細" && !params[:no_details]
+      @daily_report_details_list = make_details_list(@daily_reports)
+      render "daily_report_details/index"
+      #redirect_to daily_report_details_path(daily_report_details_list: @daily_report_details_list.to_a)
+    end
+  end
 
   def show
     @daily_report = DailyReport.find(params[:id])
@@ -199,6 +209,29 @@ class DailyReportsController < ApplicationController
   end
 
   private
+
+  def make_details_list(daily_reports)
+
+    ids = []
+    daily_reports.each do |report|
+      ids << report.id
+    end
+
+    deatail_str = ""
+    if @daily_search_params[:action_id] && @daily_search_params[:category_id]
+      deatail_str = "daily_report_details.action_id = #{@daily_search_params[:action_id]} AND daily_report_details.category_id = #{@daily_search_params[:category_id]} AND "
+    elsif @daily_search_params[:action_id]
+      deatail_str = "daily_report_details.action_id = #{@daily_search_params[:action_id]} AND "
+    elsif @daily_search_params[:category_id]
+      deatail_str = "daily_report_details.category_id = #{@daily_search_params[:category_id]} AND "
+    end
+
+
+    DailyReportDetail.joins(:daily_report)
+                        .select('daily_report_details.*, daily_reports.*')
+                        .where(deatail_str + "daily_report_details.daily_report_id in (?)", ids)
+
+  end
 
   def get_col_data(cat_id, act_id)
 

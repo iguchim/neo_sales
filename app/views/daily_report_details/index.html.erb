@@ -1,0 +1,40 @@
+<h2>営業日報詳細</h2>
+<div class="container">
+<div class="row">
+<table class="table table-striped">
+    <thead>
+      <tr>
+        <th>実施日</th>
+        <th>営業</th>
+        <th>顧客</th>
+        <th>担当</th>
+        <th>内容</th>
+        <th>特記事項</th>
+        <th>コメント</th>
+        <th>内容</th>
+        <th>行動</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <% for item in @daily_report_details_list %>
+      <tr>
+        <td><%= simple_format(item.report_date.strftime('%Y/%m/%d')) %></td>
+        <td class="col-sm-1"><%= simple_format(user_name(item.user_id)) %></td>
+        <td class="col-sm-1"><%= simple_format(item.customer) %></td>
+        <td><%= simple_format(item.personnel) %></td>
+        <td class="col-sm-3"><%= simple_format(item.contents) %></td>
+        <td class="col-sm-1"><%= simple_format(item.notes) %></td>
+        <td class="col-sm-2"><%= simple_format(item.comment) %></td>
+        <td><%= simple_format(category_name(item.category_id)) %></td>
+        <td><%= simple_format(action_name_str(item.action_id)) %></td>
+      </tr>
+      <% end %>
+    </tbody>
+    
+  </table>
+  <%= link_to '戻る', :back, class: 'btn btn-primary' %>
+  <%= link_to '戻る2', url_for(:back), class: 'btn btn-primary' %>
+  <%= link_to '戻る3', daily_reports_path(user_id: params[:user_id], category_id: params[:category_id], action_id: params[:action_id], auth_state: params[:auth_state], disp_state: params[:disp_state], no_details: true), class: 'btn btn-primary' %>
+</div>
+</div>

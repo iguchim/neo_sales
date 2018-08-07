@@ -12,6 +12,8 @@
 
       <%= select_tag :auth_state,  options_for_select({"状態" => "", "未確認" => "未確認", "確認" => "確認"}, @daily_search_params[:auth_state]), class: "form-group form-control" %>
 
+      <%= select_tag :disp_state,  options_for_select({"表示" => "", "詳細" => "詳細", "リスト" => "リスト"}, @daily_search_params[:disp_state]), class: "form-group form-control" %>
+
       <%= submit_tag "検索", class: "form-group form-control btn btn-primary" %>
     
     </div>
