@@ -229,10 +229,16 @@ class DailyReportsController < ApplicationController
     end
 
 
-    DailyReportDetail.joins(:daily_report)
+    sel_deatails = DailyReportDetail.joins(:daily_report)
                         .select('daily_report_details.*, daily_reports.*')
                         .where(deatail_str + "daily_report_details.daily_report_id in (?)", ids)
                         .order("report_date DESC")
+
+    if @daily_search_params[:search].nil?
+      sel_deatails
+    else
+      sel_deatails = sel_deatails.search(@daily_search_params[:search])
+    end
 
   end
 
