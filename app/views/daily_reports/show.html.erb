@@ -58,8 +58,7 @@
     
   </table>
 
- 
-  <% if from_daily_report_index? %>
+  <% if from_daily_report_index? || params[:from] == "index" %>
     <%= link_to '戻る', url_for(:back), class: 'btn btn-primary' %>
   <% else %>
     <%= link_to '日報リスト', daily_reports_path, class: 'btn btn-primary' %>

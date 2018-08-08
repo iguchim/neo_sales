@@ -38,6 +38,9 @@ gem 'rails-i18n'
 gem 'chartkick'
 #gem 'chartable'
 
+gem 'kaminari', '~> 1.1', '>= 1.1.1'
+gem 'kaminari-bootstrap', '~> 3.0', '>= 3.0.1'
+
 group :development, :test do
   #gem 'sqlite3', '1.3.13'
   #gem 'byebug',  '9.0.6', platform: :mri

@@ -3,6 +3,8 @@ class DailyReport < ApplicationRecord
   has_many :daily_report_details, dependent: :destroy
   belongs_to :user
 
+  # paginates_per 5 not working
+
   validates :user_id,  presence: true
   validates :report_date,  presence: true
 

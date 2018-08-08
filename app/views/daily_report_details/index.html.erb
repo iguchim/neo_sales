@@ -33,8 +33,6 @@
     </tbody>
     
   </table>
-  <%= link_to '戻る', :back, class: 'btn btn-primary' %>
-  <%= link_to '戻る2', url_for(:back), class: 'btn btn-primary' %>
-  <%= link_to '戻る3', daily_reports_path(user_id: params[:user_id], category_id: params[:category_id], action_id: params[:action_id], auth_state: params[:auth_state], disp_state: params[:disp_state], no_details: true), class: 'btn btn-primary' %>
+  <%= link_to '戻る', daily_reports_path(search: params[:search], user_id: params[:user_id], category_id: params[:category_id], action_id: params[:action_id], auth_state: params[:auth_state], disp_state: params[:disp_state], no_details: true), class: 'btn btn-primary' %>
 </div>
 </div>

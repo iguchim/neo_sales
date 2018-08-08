@@ -55,6 +55,8 @@ class DailyReportsController < ApplicationController
       @daily_reports = search_results(@daily_search_params)
     end
 
+    @daily_reports = Kaminari.paginate_array(@daily_reports).page(params[:page])
+
     if @daily_search_params[:disp_state] == "詳細" && !params[:no_details]
       @daily_report_details_list = make_details_list(@daily_reports)
       render "daily_report_details/index"
@@ -230,6 +232,7 @@ class DailyReportsController < ApplicationController
     DailyReportDetail.joins(:daily_report)
                         .select('daily_report_details.*, daily_reports.*')
                         .where(deatail_str + "daily_report_details.daily_report_id in (?)", ids)
+                        .order("report_date DESC")
 
   end
 
