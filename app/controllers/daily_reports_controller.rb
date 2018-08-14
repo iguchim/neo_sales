@@ -406,9 +406,23 @@ class DailyReportsController < ApplicationController
       reports = reports.where('user_id = ?', items[:user_id])
     end
 
-    reports = search_category(reports, 'category_id = ?', items[:category_id])
+    if items[:category_id].nil? && items[:action_id].nil?
+      return reports
+    elsif !items[:category_id].nil? && !items[:action_id].nil?
+      search_str = "category_id = #{items[:category_id]} AND action_id = #{items[:action_id]}"
+    elsif !items[:category_id].nil?
+      search_str = "category_id = #{items[:category_id]}"
+    else
+      search_str = "action_id = #{items[:action_id]}"
+    end
 
-    reports = search_category(reports, 'action_id = ?', items[:action_id])
+
+
+    #reports = search_category(reports, 'category_id = ?', items[:category_id])
+    reports = search_category(reports, search_str)
+
+    #reports = search_category(reports, 'action_id = ?', items[:action_id])
+    #reports = search_category(reports, "action_id = #{items[:action_id]}", items[:action_id])
 
   end
 
@@ -432,16 +446,13 @@ class DailyReportsController < ApplicationController
     reports.where('id IN (?)', res_ids)
   end
 
-  def search_category(reports, category_str, category_id)
-
-    if category_id.blank?
-      return reports
-    end
+  def search_category(reports, search_str)
 
     res_ids = []
 
     reports.each do |report|
-      details = report.daily_report_details.where(category_str, category_id)
+      #details = report.daily_report_details.where(category_str, category_id)
+      details = report.daily_report_details.where(search_str)
       details.each do |elem|
         res_ids << elem.daily_report_id
       end
@@ -450,7 +461,7 @@ class DailyReportsController < ApplicationController
     res_ids.uniq!
 
     reports.where('id IN (?)', res_ids)
-
+#binding.pry
   end
 
   def search_auth(reports, auth_state)
