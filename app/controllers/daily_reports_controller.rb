@@ -186,6 +186,66 @@ class DailyReportsController < ApplicationController
   end
 
   def chart
+
+    @line_chart_params = {}
+    l_u_id = nil
+    l_cat_id = nil
+    l_act_id = nil
+    l_start = nil
+    l_end = nil
+    l_freq = nil
+
+    if !params[:line_user_id].blank?
+      l_u_id = params[:line_user_id].to_i
+      @line_chart_params[:line_user_id] = l_u_id
+    else
+      @line_chart_params[:line_user_id] = nil
+    end 
+
+    if !params[:line_category_id].blank?
+      l_cat_id = params[:line_category_id].to_i
+      @line_chart_params[:line_category_id] = l_cat_id
+    else
+      @line_chart_params[:line_category_id] = nil
+    end 
+
+    if !params[:line_action_id].blank?
+      l_act_id = params[:line_action_id].to_i
+      @line_chart_params[:line_action_id] = l_act_id
+    else
+      @line_chart_params[:line_action_id] = nil
+    end 
+
+    if !params[:line_start].blank?
+      l_start = params[:line_start]
+      @line_chart_params[:line_start] = l_start
+    else
+      @line_chart_params[:line_start] = nil
+    end 
+
+    if !params[:line_end].blank?
+      l_end = params[:line_end]
+      @line_chart_params[:line_end] = l_end
+    else
+      @line_chart_params[:line_end] = nil
+    end
+
+    if !params[:line_freq].blank?
+      l_freq = params[:line_freq]
+      @line_chart_params[:line_freq] = l_freq
+    else
+      @line_chart_params[:line_freq] = nil
+    end 
+
+    @line_data = get_line_data(l_u_id, l_cat_id, l_act_id, l_start, l_end, l_freq)
+
+    #@line_data = 
+    # [{:name=>"伊藤", :data=>[["2018-7-1", 2], ["2018-7-8", 1], ["2018-7-15", 5]]},
+    #  {:name=>"山本", :data=>[["2018-7-1", 2], ["2018-7-8", 3], ["2018-7-15", 4]]},
+    #  {:name=>"塩原", :data=>[["2018-7-1", 5], ["2018-7-8", 5], ["2018-7-15", 0]]}]
+
+    #--------------------------------------
+
     @chart_params = {}
     cat_id = nil
     act_id = nil
@@ -211,6 +271,7 @@ class DailyReportsController < ApplicationController
   end
 
   private
+
 
   def make_details_list(daily_reports)
 
@@ -239,6 +300,56 @@ class DailyReportsController < ApplicationController
     else
       sel_deatails = sel_deatails.search(@daily_search_params[:search])
     end
+
+  end
+
+  def get_line_data(u_id, cat_id, act_id, s_str, e_str, f_str)
+
+    sql_str_arr = []
+    cnt = 0
+    if !u_id.nil?
+      sql_str_arr[cnt] = "user_id = #{u_id}"
+      cnt += 1
+    end
+    if !cat_id.nil?
+      sql_str_arr[cnt] = "category_id = #{cat_id}"
+      cnt += 1
+    end
+    if !act_id.nil?
+      sql_str_arr[cnt] = "action_id = #{act_id}"
+      cnt += 1
+    end
+
+    sql_str = nil
+    sql_str_arr.each do |sql|
+      if sql_str.nil?
+        sql_str = sql
+      else
+        sql_str = sql_str + " AND " + sql
+      end
+    end
+
+    period_str = "report_date BETWEEN " + "'" + "#{s_str}" + "'" + " AND " + "'" + "#{e_str}" + "'"
+    if sql_str.nil?
+      sql_str = period_str
+    else
+      sql_str = sql_str + " AND " + period_str
+    end
+
+    raw_data = DailyReportDetail.joins(:daily_report)
+                        .where(sql_str)
+
+    if f_str == "月"
+      line_data = raw_data.group(:user_id).group_by_month(:report_date, week_start: :mon).count
+    else
+      line_data = raw_data.group(:user_id).group_by_week(:report_date, week_start: :mon).count
+    end
+
+    line_data.each do |key, value|
+      key[0] = user_name(key[0])
+    end
+
+    line_data
 
   end
 

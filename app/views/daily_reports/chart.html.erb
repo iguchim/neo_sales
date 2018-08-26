@@ -4,9 +4,42 @@
 <div class="col-sm-12 center">
   <%= form_tag chart_path, method: 'get' do %>
     <div class="form-inline">
+      <%= text_field_tag :line_start, @line_chart_params[:line_start] ? @line_chart_params[:line_start] : Time.now.strftime("%Y-%m-%d"), class: "date-picker-date form-group form-control" %>
+      <%= label :name, "〜", class: 'form-group' %>
+      <%= text_field_tag :line_end, @line_chart_params[:line_end] ? @line_chart_params[:line_end] : Time.now.strftime("%Y-%m-%d"), class: "date-picker-date form-group form-control" %>
+      <%= select_tag :line_freq, options_for_select({"週" => "週", "月" => "月"}, :selected => @line_chart_params[:line_freq]), class: "form-group form-control" %>
+      <%= select_tag :line_user_id, content_tag(:option,'名前',:value=>"")+options_from_collection_for_select(User.all, 'id', 'name', @line_chart_params[:line_user_id].to_i), class: "form-group form-control" %>
+
+      <%= select_tag :line_category_id, content_tag(:option, '内容区分',:value=>"")+options_from_collection_for_select(Category.all, 'id', 'name', @line_chart_params[:line_category_id].to_i), class: "form-group form-control" %>
+
+      <%= select_tag :line_action_id, content_tag(:option, '行動区分',:value=>"")+options_from_collection_for_select(Action.all, 'id', 'name', @line_chart_params[:line_action_id].to_i), class: "form-group form-control" %>
+
+      <%= hidden_field_tag :category_id, @chart_params[:category_id] %>
+      <%= hidden_field_tag :action_id, @chart_params[:action_id] %>
+
+      <%= submit_tag "実行", class: "form-group form-control btn btn-primary" %>
+    </div>
+  <% end %>
+</div>
+
+<div class="col-sm-12">
+  <%= line_chart @line_data %>
+</div>
+
+
+<div class="col-sm-12 center">
+  <%= form_tag chart_path, method: 'get' do %>
+    <div class="form-inline">
       <%= select_tag :category_id, content_tag(:option, '内容区分',:value=>"")+options_from_collection_for_select(Category.all, 'id', 'name', @chart_params[:category_id].to_i), class: "form-group form-control" %>
 
       <%= select_tag :action_id, content_tag(:option, '行動区分',:value=>"")+options_from_collection_for_select(Action.all, 'id', 'name', @chart_params[:action_id].to_i), class: "form-group form-control" %>
+
+      <%= hidden_field_tag :line_user_id, @line_chart_params[:line_user_id] %>
+      <%= hidden_field_tag :line_category_id, @line_chart_params[:line_category_id] %>
+      <%= hidden_field_tag :line_action_id, @line_chart_params[:line_action_id] %>
+      <%= hidden_field_tag :line_start, @line_chart_params[:line_start] %>
+      <%= hidden_field_tag :line_end, @line_chart_params[:line_end] %>
+      <%= hidden_field_tag :line_freq, @line_chart_params[:line_freq] %>
 
       <%= submit_tag "実行", class: "form-group form-control btn btn-primary" %>
     </div>

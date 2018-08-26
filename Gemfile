@@ -41,6 +41,9 @@ gem 'chartkick'
 gem 'kaminari', '~> 1.1', '>= 1.1.1'
 gem 'kaminari-bootstrap', '~> 3.0', '>= 3.0.1'
 
+gem 'groupdate', '~> 4.0', '>= 4.0.1'
+#gem "groupdate", github: "ankane/groupdate", branch: "debug_time_zone_support"
+
 group :development, :test do
   #gem 'sqlite3', '1.3.13'
   #gem 'byebug',  '9.0.6', platform: :mri
