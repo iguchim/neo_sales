@@ -162,7 +162,7 @@ class DailyReportsController < ApplicationController
     @daily_report = DailyReport.find(params[:id])
     UserMailer.with(user_id: @daily_report.user_id, 
           url: daily_report_url(@daily_report)).reply_from_daily_user.deliver_now
-    flash[:success] = "返答返答完了メールを送信しました。"
+    flash[:success] = "返答完了メールを送信しました。"
     redirect_to daily_report_path(params[:id])
   end
 
@@ -387,9 +387,11 @@ class DailyReportsController < ApplicationController
     end
   end
 
-  def make_single_col_data(raw_data)
+  def make_single_col_data(raw_data)  
     col_data = {}
-    User.all.each do |user|
+    #User.all.each do |user|
+    #s_users = sales_users
+    sales_users.each do |user|
       if user.admin
         next
       end
@@ -397,7 +399,7 @@ class DailyReportsController < ApplicationController
       if val.nil?
         val = 0
       end
-      col_data[user.name] = val
+      col_data[user.name] = val    
     end
     col_data
   end
@@ -415,7 +417,8 @@ class DailyReportsController < ApplicationController
       col_data << {}
       col_data[i][:name] = item.name
       col_data[i][:data] = []
-      User.all.each do |user|
+      #User.all.each do |user|
+      sales_users.each do |user|
         if user.admin
           next
         end
@@ -435,7 +438,8 @@ class DailyReportsController < ApplicationController
 
   def get_action_data
     action_data = {}
-    User.all.each do |user|
+    #User.all.each do |user|
+    sales_users.each do |user|
       if user.admin
         next
       end
@@ -470,7 +474,8 @@ class DailyReportsController < ApplicationController
 
   def get_contents_data
     contents_data = {}
-    User.all.each do |user|
+    #User.all.each do |user|
+    sales_users.each do |user|
       if user.admin
         next
       end

@@ -6,7 +6,7 @@
     <div class="form-inline">
       <%= text_field_tag :search, params[:item], value: @daily_search_params[:search] ,class: "form-group form-control" %>
 
-      <%= select_tag :user_id, content_tag(:option,'名前',:value=>"")+options_from_collection_for_select(User.all, 'id', 'name', @daily_search_params[:user_id].to_i), class: "form-group form-control" %>
+      <%= select_tag :user_id, content_tag(:option,'名前',:value=>"")+options_from_collection_for_select(sales_users, 'id', 'name', @daily_search_params[:user_id].to_i), class: "form-group form-control" %>
 
       <%= select_tag :category_id, content_tag(:option, '内容区分',:value=>"")+options_from_collection_for_select(Category.all, 'id', 'name', @daily_search_params[:category_id].to_i), class: "form-group form-control" %>
 

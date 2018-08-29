@@ -15,4 +15,11 @@ module UsersHelper
     end
   end
 
+  def sales_users
+    sd_id = Department.find_by(name:"営業部")
+    User.where("department_id=?", sd_id)
+  end
+
+  #module_function :sales_users
+
 end

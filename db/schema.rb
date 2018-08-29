@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180704061758) do
+ActiveRecord::Schema.define(version: 20180828024837) do
 
   create_table "actions", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.string "name"
@@ -43,7 +43,13 @@ ActiveRecord::Schema.define(version: 20180704061758) do
     t.index ["user_id"], name: "index_daily_reports_on_user_id"
   end
 
-  create_table "events", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=latin1" do |t|
+  create_table "departments", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+    t.string "name"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "events", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.string "title"
     t.datetime "start"
     t.datetime "end"
@@ -162,6 +168,8 @@ ActiveRecord::Schema.define(version: 20180704061758) do
     t.datetime "reset_sent_at"
     t.string "name"
     t.string "color"
+    t.bigint "department_id"
+    t.index ["department_id"], name: "index_users_on_department_id"
     t.index ["email"], name: "index_users_on_email", unique: true
   end
 
@@ -176,4 +184,5 @@ ActiveRecord::Schema.define(version: 20180704061758) do
   add_foreign_key "requests", "orders"
   add_foreign_key "requests", "users"
   add_foreign_key "requests", "users", column: "auth_id"
+  add_foreign_key "users", "departments"
 end
