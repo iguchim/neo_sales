@@ -1,4 +1,4 @@
-<h2>営業日報</h2>
+<h4 align="center">営業日報編集</h4>
 
 <%= form_for(@daily_report, url: path, method: method) do |f| %>
 
@@ -9,15 +9,8 @@
 
   <div class="form-group">
     <div class="col-sm-12">
-    <label class="text-right bottom-text col-sm-2 control-label" for="">営業</label>
-    <div class="col-sm-4 aline-center">
-      <% if method == :put %>
-        <%= user_name(@daily_report.user_id) %><!-- ONLY FOR TIME BEEING!!!! -->
-      <% else %>
-        <%= current_user.name%>
-      <% end %>
-
-    </div>
+    <% method == :put ? name = user_name(@daily_report.user_id) : name = current_user.name %>
+    <p class="col-sm-6"><span class="label label-primary">営業</span><%= " "+name %></p>
   </div>
   </div>
 
@@ -26,9 +19,9 @@
 <div class="col-sm-6">
 
   <div class="form-group">
-    <div class="col-sm-12">
-    <label class="text-right col-sm-3 col-sm-offset-5 control-label" for="">実施日</label>
-    <div class="col-sm-4">
+    <div class="col-sm-12 form-inline">
+    <p class="col-sm-2" ><span class="label label-primary">実施日</span></p>
+    <div class="col-sm-3">
       <%= f.text_field :report_date,  :value => (f.object.report_date.strftime('%Y/%m/%d/%H/%M') unless f.object.report_date.nil?), class: 'date-picker-date form-control' %>
     </div>
     </div>

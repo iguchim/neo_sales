@@ -1,14 +1,14 @@
-<h2>営業日報</h2>
+<h4 align="center">営業日報詳細</h4>
 <div class="container">
 <div class="row">
 
 <div class="col-sm-6">
 
   <div class="col-sm-12">
-    <p class="col-sm-4">営業：<%= user_name(@daily_report.user_id) %></p>
+    <p class="col-sm-4"><span class="label label-primary">営業</span><%= " "+user_name(@daily_report.user_id) %></p>
   </div>
   <div class="col-sm-12">
-    <p class="col-sm-6">実施日：<%=@daily_report.report_date.strftime('%Y/%m/%d') %></p>
+    <p class="col-sm-6"><span class="label label-primary">実施日</span><%= " "+@daily_report.report_date.strftime('%Y/%m/%d') %></p>
   </div>
 
 </div><!--col-sm-6-->
@@ -16,15 +16,12 @@
 <div class="col-sm-6">
     
   <div class="col-sm-12">
-    <% if @daily_report.auth_id.nil? %>
-      <p class="col-sm-4">確認：---</p>
-    <% else %>
-      <p class="col-sm-4">確認：<%= user_name(@daily_report.auth_id) %></p>
-    <% end %>
+    <% @daily_report.auth_id.nil? ? conf = '---' : conf = user_name(@daily_report.auth_id) %>
+    <p class="col-sm-4"><span class="label label-primary">確認</span><%= " "+conf %></p>
   </div>
 
   <div class="col-sm-12">
-    <p class="col-sm-4">状態：<%= @daily_report.state %></p>
+    <p class="col-sm-4"><span class="label label-primary">状態</span><%= " "+@daily_report.state %></p>
   </div>
 
 </div><!--col-sm-6-->

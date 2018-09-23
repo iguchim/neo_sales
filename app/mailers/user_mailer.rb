@@ -128,6 +128,136 @@ class UserMailer < ApplicationMailer
     @url = params[:url]
     mail(to: emails, subject: 'コメントへの返答です。')
   end
+
+  #=== Objective >>> =====================================
+  def notice_from_objective_auth
+
+    @auth = User.find(params[:auth_id])
+    user_mail = User.find(params[:user_id]).email
+    @url = params[:url]
+    mail(to: user_mail, subject:'承認されました。')
+    
+  end
+
+  def decline_from_objective_auth
+
+    @auth = User.find(params[:auth_id])
+    user_mail = User.find(params[:user_id]).email
+    @url = params[:url]
+    mail(to: user_mail, subject:'取消れました。')
+    
+  end
+
+  def request_to_objective_user
+    @auth = User.find(params[:auth_id])
+    user_mail = User.find(params[:user_id]).email
+    @url = params[:url]
+    mail(to: user_mail, subject: 'コメントへの返答要求です。')
+  end
+
+  def reply_from_objective_user
+    @user = User.find(params[:user_id])
+    auths = User.where(admin: true)
+    emails = []
+    auths.each do |auth|
+      emails << auth.email
+    end
+
+    @url = params[:url]
+    mail(to: emails, subject: 'コメントへの返答です。')
+  end
+
+  def notice_from_objective_user
+
+    @user = User.find(params[:user_id])
+    @url = params[:url]
+    auths = User.where(admin: true)
+    emails = []
+    auths.each do |auth|
+      emails << auth.email
+    end
+    mail(to: emails, subject:'承認要求です。')
+ 
+  end
+
+  def decline_from_objective_user
+
+    @user = User.find(params[:user_id])
+    @url = params[:url]
+    auths = User.where(admin: true)
+    emails = []
+    auths.each do |auth|
+      emails << auth.email
+    end
+    mail(to: emails, subject:'承認要求の取消です。')
+
+  end
+  #===================================== <<< Objective ===
+
+  #=== Objective Detail >>> ==============================
+  def notice_from_objective_detail_auth
+
+    @auth = User.find(params[:auth_id])
+    user_mail = User.find(params[:user_id]).email
+    @url = params[:url]
+    mail(to: user_mail, subject:'承認されました。')
+    
+  end
+
+  def decline_from_objective_detail_auth
+
+    @auth = User.find(params[:auth_id])
+    user_mail = User.find(params[:user_id]).email
+    @url = params[:url]
+    mail(to: user_mail, subject:'取消れました。')
+    
+  end
+
+  def request_to_objective_detail_user
+    @auth = User.find(params[:auth_id])
+    user_mail = User.find(params[:user_id]).email
+    @url = params[:url]
+    mail(to: user_mail, subject: 'コメントへの返答要求です。')
+  end
+
+  def reply_from_objective_detail_user
+    @user = User.find(params[:user_id])
+    auths = User.where(admin: true)
+    emails = []
+    auths.each do |auth|
+      emails << auth.email
+    end
+
+    @url = params[:url]
+    mail(to: emails, subject: 'コメントへの返答です。')
+  end
+
+  def notice_from_objective_detail_user
+
+    @user = User.find(params[:user_id])
+    @url = params[:url]
+    auths = User.where(admin: true)
+    emails = []
+    auths.each do |auth|
+      emails << auth.email
+    end
+    mail(to: emails, subject:'承認要求です。')
+ 
+  end
+
+  def decline_from_objective_detail_user
+
+    @user = User.find(params[:user_id])
+    @url = params[:url]
+    auths = User.where(admin: true)
+    emails = []
+    auths.each do |auth|
+      emails << auth.email
+    end
+    mail(to: emails, subject:'承認要求の取消です。')
+
+  end
+  #============================== <<< Objective Detail ===
   #-------------------------------------------------------
   def account_activation(user)
     @user = user

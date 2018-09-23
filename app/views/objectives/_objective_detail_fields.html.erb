@@ -1,0 +1,28 @@
+<% f.object.id.nil? || f.object.auth_id.nil? && detail_obj_owner?(f.object) && !(f.object.state == '返答完了' || f.object.state == '申請') ? read_only = false : read_only = true %>
+<tr class= "nested-fields">
+  <td class="col-sm-2">
+  <%= f.text_field :exec_date, :value => (f.object.exec_date.strftime("%Y-%m-%d") unless f.object.exec_date.nil?), :readonly => read_only, class: 'date-picker-date-cocoon form-control' %>
+  </td>
+  <td class="col-sm-3">
+  <%= f.text_area :contents, :readonly => read_only, class: 'form-control' %>
+  </td>
+  <td class="col-sm-1">
+  <%= f.text_field :amount, :value => (number_with_precision(f.object.amount, strip_insignificant_zeros: true) unless f.object.amount.nil?), :readonly => read_only, class: 'form-control', style:'text-align:right' %>
+  </td>
+  <td class="col-sm-2">
+  <% detail_obj_admin?(f.object) ? read_only = false : read_only = true %>  
+  <%= f.text_area :comment, :readonly => read_only, class: 'form-control' %>
+  </td>
+  <td class="col-sm-1">
+  <%= text_field_tag '', '', :value => get_objective_detail_state(f.object), :readonly => true, class: 'form-control' %>
+  </td>
+  <td class="col-sm-1">
+  <% f.object.auth_id.nil? ? name = '---' : name = user_name(f.object.auth_id) %>
+  <%= text_field_tag '', '', :value => name ,:readonly => true, class: 'form-control' %>
+  </td>
+  <% if f.object.id.nil? || ((current_user.id == f.object.objective.user_id) && f.object.auth_id.nil?) %>
+    <td class="col-sm-1">
+      <%= link_to_remove_association '削除', f, data: {confirm: '本当に削除しますか？'}, class: 'btn btn-danger' %>
+    </td>
+  <% end %>
+</tr>

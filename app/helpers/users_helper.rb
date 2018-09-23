@@ -7,6 +7,7 @@ module UsersHelper
   end
 
   def user_name(id)
+    return "---" if id.nil?
     user = User.find(id)
     if user.nil?
       "---"

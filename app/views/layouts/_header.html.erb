@@ -1,13 +1,17 @@
 <header class="navbar navbar-fixed-top navbar-inverse">
   <div class="container">
     <% if logged_in? %>
-      <%= link_to "ネオテック営業部日報", root_path, id: "logo" %>
+      <%= link_to "ネオテック", root_path, id: "logo" %>
       <nav>
         <ul class="nav navbar-nav navbar-right">
           <li><%= link_to "ホーム",   root_path %></li>
-          <li><%= link_to "グラフ",   chart_path %></li>
+          <li><%= link_to "個人目標", objectives_path %></li>
+          <li><%= link_to "営業部日報", daily_reports_path %></li>
+          <li><%= link_to "営業グラフ",   chart_path %></li>
+          <% if false %>
           <li><%= link_to "カレンダー", schedules_path %></li>
           <li><%= link_to "出張", requests_path %></li>
+          <% end %>
           <li><%= link_to "ログアウト", logout_path, method: :delete %></li>
         </ul>
       </nav>

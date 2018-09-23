@@ -6,7 +6,7 @@ Rails.application.routes.draw do
 
   #root 'static_pages#home' # => root_path
   #root 'requests#index'
-  root 'daily_reports#index'
+  root 'notices#index'
   get  '/help',    to: 'static_pages#help'
   get  '/about',   to: 'static_pages#about'
   get  '/contact', to: 'static_pages#contact'
@@ -32,6 +32,19 @@ Rails.application.routes.draw do
   get '/daily_rep_from', to: 'daily_reports#rep_from'
   
   get '/chart', to: 'daily_reports#chart'
+
+  get '/objective_rep_state', to: 'objectives#state'
+  get '/objective_auth_rep', to: 'objectives#auth'
+
+  get '/objective_req_to', to: 'objectives#req_to'
+  get '/objective_rep_from', to: 'objectives#rep_from'
+
+  get '/objective_detail_rep_state', to: 'objective_details#state'
+  get '/objective_detail_auth_rep', to: 'objective_details#auth'
+
+  get '/objective_detail_req_to', to: 'objective_details#req_to'
+  get '/objective_detail_rep_from', to: 'objective_details#rep_from'
+
 
   #get '/line_chart', to: 'daily_reports#line_chart'
   
@@ -75,6 +88,12 @@ Rails.application.routes.draw do
   end
 
   resources :daily_report_details
+
+  resources :objectives do
+    resources :objective_details
+  end
+
+  resources :notices
   
   resources :account_activations, only: [:edit]
   resources :password_resets,     only: [:new, :create, :edit, :update]

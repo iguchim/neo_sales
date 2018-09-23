@@ -1,0 +1,36 @@
+<h4 align="center">個人目標リスト</h4>
+<div class="container">
+<div class="row">
+
+<table class="table table-striped">
+    <thead>
+      <tr>
+        <th>項番</th>
+        <th>名前</th>
+        <th>目標</th>
+        <th>達成期限</th>
+        <th>達成率</th>
+        <th>状態</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @objectives.each do |objective| %>
+        <tr>
+          <td><%= link_to("#{objective.id}", objective_path(objective, from: "index")) %></td>
+          <td><%= user_name(objective.user_id) %></td>
+          <td><%= objective.overview %></td>
+          <td><%= objective.due_date.strftime('%Y/%m/%d') %></td>
+          <td><%= number_to_percentage(get_objective_rate(objective)*100, :precision => 0) %></td>
+          <td><%= get_objective_state(objective) %></td>
+          <% if objective.auth_id.nil? && no_objective_details?(objective.id, objective.user_id) %>
+            <td><%= link_to '削除', objective_path(objective), method: :delete, data: {confirm: '本当に削除しますか？'}, class: 'btn btn-danger' %>
+          <% else %>
+            <td></td>
+          <% end %>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+  <%= link_to '新規', new_objective_path, class: 'btn btn-primary' %>
+</div>
+</div>

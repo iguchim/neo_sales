@@ -1,0 +1,205 @@
+<h4 align="center">個人目標詳細</h4>
+<div class="container">
+<div class="row">
+
+<div class="col-sm-6">
+  <div class="form-group">
+
+    <div class="col-sm-12">
+      <p class="col-sm-2"><span class="label label-primary">氏名</span></p>
+      <div class="col-sm-3 well well-sm">
+        <%= user_name(@objective.user_id) %>
+      </div>
+    
+      <p class="col-sm-2"><span class="label label-primary">承認</span></p>
+      <div class="col-sm-3 well well-sm">
+        <% @objective.auth_id.nil? ? auth_name = '---' : auth_name = user_name(@objective.auth_id) %>
+        <%= auth_name %>
+      </div>
+    </div>
+
+    <div class="col-sm-12">
+      <p class="col-sm-2" ><span class="label label-primary">目標</span></p>
+      <div class="col-sm-8 well">
+        <%= simple_format@objective.overview %>
+      </div>
+    </div>
+
+    <div class="col-sm-12">
+      <p class="col-sm-2" ><span class="label label-primary">目標指標</span></p>
+      <div class="col-sm-8 well">
+        <%= simple_format(@objective.goal) %>
+      </div>
+    </div>
+    
+    <div class="col-sm-12">
+      <p class="col-sm-2" ><span class="label label-primary">目標数値</span></p>
+      <div class="col-sm-3 well well-sm text-right">
+        <%= number_with_precision(@objective.goal_amount, strip_insignificant_zeros: true) %>
+      </div>
+      <p class="col-sm-2" ><span class="label label-primary">単位</span></p>
+      <div class="col-sm-3 well well-sm">
+        <%= @objective.unit %>
+      </div>
+    </div>
+
+    <div class="col-sm-12">
+      <p class="col-sm-2" ><span class="label label-primary">達成数値</span></p>
+      <div class="col-sm-3 well well-sm text-right">
+        <%= number_with_precision(@objective.current_amount, strip_insignificant_zeros: true) %>
+      </div>
+      <p class="col-sm-2" ><span class="label label-primary">達成率</span></p>
+      <div class="col-sm-3 well well-sm text-right">
+
+        <% rate =  get_objective_rate(@objective) * 100 %>
+        <%= number_to_percentage(rate, :precision => 0) %>
+      </div>
+    </div>
+
+  </div>
+
+</div><!-- class="col-sm-6" -->
+
+<div class="col-sm-6">
+
+  <div class="form-group">
+
+    <div class="col-sm-12">
+      <p class="col-sm-2" ><span class="label label-primary">詳細</span></p>
+      <div class="col-sm-8 well">
+        <%= simple_format(@objective.details) %>
+      </div>
+    </div>
+
+    <div class="col-sm-12">
+      <p class="col-sm-2" ><span class="label label-primary">上長</span></p>
+      <div class="col-sm-8 well">
+        <%= simple_format(@objective.comment) %>
+      </div>
+    </div>
+
+    <div class="col-sm-12">
+      <p class="col-sm-2" ><span class="label label-primary">設定日</span></p>
+      <div class="col-sm-3 well well-sm">
+        <%= @objective.set_date.strftime('%Y/%m/%d') %>
+      </div>
+      <p class="col-sm-2" ><span class="label label-primary">期限</span></p>
+      <div class="col-sm-3 well well-sm">
+        <%= @objective.due_date.strftime('%Y/%m/%d') %>
+      </div>
+    </div>
+
+    <div class="col-sm-12">
+      
+      <p class="col-sm-2"><span class="label label-primary">状態</span></p>
+      <div class="col-sm-3 well well-sm">
+        <%= get_objective_state(@objective) %>
+      </div>
+      <% if current_user.admin && current_user.id != @objective.user_id %>
+        <p class="col-sm-2" ><span class="label label-primary">点数</span></p>
+        <% if @objective.points.nil? %>
+          <div class="col-sm-3 well text-right">
+        <% else %>
+          <div class="col-sm-3 well well-sm text-right">
+        <% end %>
+          <%= @objective.points %>
+        </div>
+      <% end %>
+    </div>
+
+  </div>
+
+</div>
+
+<table class="table table-striped">
+    <thead>
+      <tr>
+        <th>実行日</th>
+        <th>内容</th>
+        <th>達成数値</th>
+        <th>上長コメント</th>
+        <th>状態</th>
+        <th>承認</th>
+        <% head_num = objective_details_get_button_num(@objective) %>
+        <% if head_num == 2 %>
+          <th></th>
+          <th></th>
+        <% elsif head_num == 1 %>
+          <th></th>
+        <% end %>
+      </tr>
+    </thead>
+  
+    <tbody>
+      <% for item in @objective_details %>
+      <% num = objective_detail_get_button_num(item) %>
+      <tr>
+        <td class="col-sm-1"><%= simple_format(item.exec_date.strftime('%Y/%m/%d')) %></td>
+        <td class="col-sm-3"><%= simple_format(item.contents) %></td>
+        <td class="col-sm-1 text-right"><%= simple_format(number_with_precision(item.amount, strip_insignificant_zeros: true)) %></td>
+        <td class="col-sm-3"><%= simple_format(item.comment) %></td>
+        <td class="col-sm-1"><%= simple_format(get_objective_detail_state(item)) %></td>
+        <% item.auth_id.nil? ? auth = '---' : auth = user_name(item.auth_id) %>
+        <td class="col-sm-1"><%= simple_format(auth) %></td>
+        <% if item.auth_id.nil? %>
+          <% if detail_obj_owner?(item) %>
+            <% if (item.state == "申請") %>
+              <td class="col-sm-1"><%= link_to '下書', objective_detail_rep_state_path(id: item.id), class: 'btn btn-primary' %></td>
+            <% elsif item.state == "返答要求" %>
+              <td class="col-sm-1"><%= link_to '返答完了', objective_detail_rep_from_path(id: item.id), class: 'btn btn-primary' %></td>
+            <% elsif item.state != "返答完了" %>
+              <td class="col-sm-1"><%= link_to '申請', objective_detail_rep_state_path(id: item.id), class: 'btn btn-primary' %></td>
+            <% end %>
+          <% end %>
+          <% if detail_obj_admin?(item) %>
+            <% if (item.state == "申請") || (item.state == "返答完了") %>
+              <td class="col-sm-1"><%= link_to '返答要求', objective_detail_req_to_path(id: item.id), class: 'btn btn-primary' %></td>
+              <td class="col-sm-1"><%= link_to '承認', objective_detail_auth_rep_path(id: item.id), class: 'btn btn-primary' %></td>
+            <% end %>
+          <% end %>
+        <% elsif detail_obj_admin?(item) %>
+          <td class="col-sm-1"><%= link_to '未承認', objective_detail_auth_rep_path(id: item.id), class: 'btn btn-primary' %></td>
+        <% end %>
+        <% diff_num = head_num - num %>
+        <% if diff_num == 2 %>
+          <td></td>
+          <td></td>
+        <% elsif diff_num == 1 %>
+          <td></td>
+        <% end %>
+          
+      </tr>
+      <% end %>
+    </tbody>
+    
+  </table>
+
+  <%= link_to '個人目標リスト', objectives_path, class: 'btn btn-primary' %>
+
+  <% if (obj_owner?(@objective) && (@objective.state != "申請" && @objective.state != "返答完了"))  || (obj_admin?(@objective) && @objective.state != "下書")  %>
+    <%= link_to '編集', edit_objective_path(@objective), class: 'btn btn-primary' %>
+  <% end %>
+
+  <% if @objective.auth_id.nil? && obj_owner?(@objective) %>
+    <% if @objective.state =="申請" %>
+      <%= link_to '下書', objective_rep_state_path(id: @objective.id), class: 'btn btn-primary' %>
+    <% elsif @objective.state =="返答要求" %>
+      <%= link_to '返答完了', objective_rep_from_path(id: @objective.id), class: 'btn btn-primary' %>
+    <% elsif @objective.state !="返答完了" %>
+      <%= link_to '申請', objective_rep_state_path(id: @objective.id), class: 'btn btn-primary' %>
+    <% end %>
+  <% end %>
+
+  <% if obj_admin?(@objective) %>
+    <% if @objective.auth_id %>
+      <%= link_to '未承認', objective_auth_rep_path(id: @objective.id), class: 'btn btn-primary' %>
+    <% elsif (@objective.state == "未承認") || (@objective.state == "返答要求") || (@objective.state == "返答完了") || (@objective.state == "申請")%>
+      <% if (@objective.state == "申請") || (@objective.state == "返答完了")%>
+        <%= link_to '返答要求', objective_req_to_path(id: @objective.id), class: 'btn btn-primary' %>
+      <% end %>
+      <%= link_to '承認', objective_auth_rep_path(id: @objective.id), class: 'btn btn-primary' %>
+    <% end %>
+  <% end %>
+
+</div><!--row-->
+</div><!--container-->

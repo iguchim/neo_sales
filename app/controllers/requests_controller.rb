@@ -108,20 +108,23 @@ class RequestsController < ApplicationController
   end
 
   def auth
-    return unless current_user.admin
-    @request = Request.find(params[:id])
-   if @request.auth_id.nil? 
-      @request.auth_id = current_user.id
-      UserMailer.with(user_id: @request.user_id, auth_id: @request.auth_id,
-          url: request_url(@request)).notice_from_auth.deliver_now
-        flash[:success] = "承認メールを送信しました。"
+    if !current_user.admin
+      flash[:danger] = "管理者ではないので、承認出来ません。"
     else
-      UserMailer.with(user_id: @request.user_id, auth_id: @request.auth_id,
-          url: request_url(@request)).decline_from_auth.deliver_now
-        flash[:success] = "承認取消メールを送信しました。"
-      @request.auth_id = nil
+      @request = Request.find(params[:id])
+      if @request.auth_id.nil? 
+        @request.auth_id = current_user.id
+        UserMailer.with(user_id: @request.user_id, auth_id: @request.auth_id,
+            url: request_url(@request)).notice_from_auth.deliver_now
+          flash[:success] = "承認メールを送信しました。"
+      else
+        UserMailer.with(user_id: @request.user_id, auth_id: @request.auth_id,
+            url: request_url(@request)).decline_from_auth.deliver_now
+          flash[:success] = "承認取消メールを送信しました。"
+        @request.auth_id = nil
+      end
+      @request.save
     end
-    @request.save
 
     redirect_to request_path(params[:id])
   end

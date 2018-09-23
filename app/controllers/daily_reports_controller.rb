@@ -128,20 +128,23 @@ class DailyReportsController < ApplicationController
   end
 
   def auth
-    return unless current_user.admin
-    @daily_report = DailyReport.find(params[:id])
-   if @daily_report.auth_id.nil? 
-      @daily_report.auth_id = current_user.id
-      UserMailer.with(user_id: @daily_report.user_id, auth_id: @daily_report.auth_id,
-          url: daily_report_url(@daily_report)).notice_from_daily_auth.deliver_now
-        flash[:success] = "確認メールを送信しました。"
+    if !current_user.admin
+      flash[:danger] = "管理者ではないので、承認出来ません。"
     else
-      UserMailer.with(user_id: @daily_report.user_id, auth_id: @daily_report.auth_id,
-          url: daily_report_url(@daily_report)).decline_from_daily_auth.deliver_now
-        flash[:success] = "確認取消メールを送信しました。"
-      @daily_report.auth_id = nil
+      @daily_report = DailyReport.find(params[:id])
+      if @daily_report.auth_id.nil? 
+        @daily_report.auth_id = current_user.id
+        UserMailer.with(user_id: @daily_report.user_id, auth_id: @daily_report.auth_id,
+            url: daily_report_url(@daily_report)).notice_from_daily_auth.deliver_now
+          flash[:success] = "確認メールを送信しました。"
+      else
+        UserMailer.with(user_id: @daily_report.user_id, auth_id: @daily_report.auth_id,
+            url: daily_report_url(@daily_report)).decline_from_daily_auth.deliver_now
+          flash[:success] = "確認取消メールを送信しました。"
+        @daily_report.auth_id = nil
+      end
+      @daily_report.save
     end
-    @daily_report.save
 
     redirect_to daily_report_path(params[:id])
   end

@@ -63,21 +63,24 @@ class ReportsController < ApplicationController
   end
 
   def auth
-    return unless current_user.admin
-    @report = Report.find(params[:id])
-    user_id = Request.find(@report.request_id).user_id
-   if @report.auth_id.nil? 
-      @report.auth_id = current_user.id
-      UserMailer.with(user_id: user_id, auth_id: @report.auth_id,
-          url: request_report_url(@report.request_id, @report)).notice_from_auth.deliver_now
-        flash[:success] = "承認メールを送信しました。"
+    if !current_user.admin
+      flash[:danger] = "管理者ではないので、承認出来ません。"
     else
-      UserMailer.with(user_id: user_id, auth_id: @report.auth_id,
-          url: request_report_url(@report.request_id, @report)).decline_from_auth.deliver_now
-        flash[:success] = "承認取消メールを送信しました。"
-      @report.auth_id = nil
+      @report = Report.find(params[:id])
+      user_id = Request.find(@report.request_id).user_id
+      if @report.auth_id.nil? 
+        @report.auth_id = current_user.id
+        UserMailer.with(user_id: user_id, auth_id: @report.auth_id,
+            url: request_report_url(@report.request_id, @report)).notice_from_auth.deliver_now
+          flash[:success] = "承認メールを送信しました。"
+      else
+        UserMailer.with(user_id: user_id, auth_id: @report.auth_id,
+            url: request_report_url(@report.request_id, @report)).decline_from_auth.deliver_now
+          flash[:success] = "承認取消メールを送信しました。"
+        @report.auth_id = nil
+      end
+      @report.save
     end
-    @report.save
 
     #redirect_to report_path(params[:id])
     redirect_to report_path(@report, :request_id => @report.request_id)

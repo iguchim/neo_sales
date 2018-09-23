@@ -1,0 +1,160 @@
+<h4 align="center">個人目標編集</h4>
+
+<%= form_for(@objective, url: path, method: method) do |f| %>
+
+<% obj_form_readonly?(@objective) ? read_only = true : read_only = false %>
+
+<div class="container">
+<div class="row">
+
+<div class="col-sm-6">
+
+  <div class="form-group">
+
+    <div class="col-sm-12">
+      <p class="col-sm-2"><span class="label label-primary">氏名</span></p>
+      <div class="col-sm-3">
+        <% method == :put ? name = user_name(@objective.user_id) : name = current_user.name %>
+        <%= text_field_tag '', '', :value => name, :readonly => true, class: 'form-control' %>
+      </div>
+      <p class="col-sm-2"><span class="label label-primary">承認</span></p>
+      <div class="col-sm-3">
+        <% method == :put ? auth_name = user_name(@objective.auth_id) : auth_name = '---' %>
+        <%= text_field_tag '', '', :value => auth_name, :readonly => true, class: 'form-control' %>
+      </div>
+    </div>
+
+    <div class="col-sm-12">
+      <p class="col-sm-2" ><span class="label label-primary">目標</span></p>
+      <div class="col-sm-8">
+        <%= f.text_area :overview,  :value => (f.object.overview unless f.object.overview.nil?), :readonly => read_only, class: 'form-control' %>
+      </div>
+    </div>
+
+    <div class="col-sm-12">
+      <p class="col-sm-2" ><span class="label label-primary">目標指標</span></p>
+      <div class="col-sm-8">
+        <%= f.text_area :goal,  :value => (f.object.goal unless f.object.goal.nil?), :readonly => read_only, class: 'form-control' %>
+      </div>
+    </div>
+    
+    <div class="col-sm-12">
+      <p class="col-sm-2" ><span class="label label-primary">目標数値</span></p>
+      <div class="col-sm-3">
+        <%= f.text_field :goal_amount, :value => (number_with_precision(f.object.goal_amount, strip_insignificant_zeros: true) unless f.object.goal_amount.nil?), :readonly => read_only, class: 'form-control', style:'text-align:right' %>
+      </div>
+      <p class="col-sm-2" ><span class="label label-primary">単位</span></p>
+      <div class="col-sm-3">
+        <%= f.text_field :unit, :value => (f.object.unit unless f.object.unit.nil?), :readonly => read_only, class: 'form-control' %>
+      </div>
+    </div>
+
+    <div class="col-sm-12">
+      <p class="col-sm-2" ><span class="label label-primary">達成数値</span></p>
+      <div class="col-sm-3">
+        <%= f.text_field :current_amount, :value => (f.object.current_amount.nil? ? 0 : number_with_precision(f.object.current_amount, strip_insignificant_zeros: true)), :readonly => true, class: 'form-control', style:'text-align:right' %>
+      </div>
+      <p class="col-sm-2" ><span class="label label-primary">達成数率</span></p>
+      <div class="col-sm-3">
+        <% rate =  get_objective_rate(@objective) * 100 %>
+        <%= text_field_tag '', '', :value => number_to_percentage(rate, :precision => 0), :readonly => true, class: 'form-control' %>
+      </div>
+    </div>
+
+  </div>
+
+</div><!-- class="col-sm-6" -->
+
+<div class="col-sm-6">
+
+  <div class="form-group">
+
+    <div class="col-sm-12">
+      <p class="col-sm-2" ><span class="label label-primary">詳細</span></p>
+      <div class="col-sm-8">
+        <%= f.text_area :details,  :value => (f.object.details unless f.object.details.nil?), :readonly => read_only, class: 'form-control' %>
+      </div>
+    </div>
+
+    <div class="col-sm-12">
+      <p class="col-sm-2" ><span class="label label-primary">上長</span></p>
+      <div class="col-sm-8">
+        <%= f.text_area :comment,  :value => (f.object.comment unless f.object.comment.nil?), :readonly => (current_user.admin && (!f.object.user_id.nil? && (f.object.user_id != current_user.id)) ? false : true), class: 'form-control' %>
+      </div>
+    </div>
+
+    <div class="col-sm-12">
+      <p class="col-sm-2" ><span class="label label-primary">設定日</span></p>
+      <div class="col-sm-3">
+        <%= f.text_field :set_date,  :value => (f.object.set_date.strftime('%Y/%m/%d/%H/%M') unless f.object.set_date.nil?), :readonly => read_only, class: 'date-picker-date form-control' %>
+      </div>
+      <p class="col-sm-2" ><span class="label label-primary">期限</span></p>
+      <div class="col-sm-3">
+        <%= f.text_field :due_date,  :value => (f.object.due_date.strftime('%Y/%m/%d/%H/%M') unless f.object.due_date.nil?), :readonly => read_only, class: 'date-picker-date form-control' %>
+      </div>
+    </div>
+
+    <div class="col-sm-12">
+      
+      <p class="col-sm-2"><span class="label label-primary">状態</span></p>
+      <div class="col-sm-3">
+        <%= text_field_tag '', '', :value => get_objective_state(f.object), :readonly => true, class: 'form-control' %>
+      </div>
+      <% if (current_user.admin && (!f.object.user_id.nil? && (f.object.user_id != current_user.id))) %>
+        <p class="col-sm-2" ><span class="label label-primary">点数</span></p>
+        <div class="col-sm-3">
+          <%= f.text_field :points,  :value => (f.object.points unless f.object.points.nil?), class: 'form-control' %>
+        </div>
+      <% end %>
+    </div>
+  </div>
+
+</div><!-- class="col-sm-6" -->
+
+<div class="col-sm-12">
+<% if ((current_user.id == @objective.user_id) && (@objective.auth_id)) %>
+<div class="text-right">
+  <%= link_to_add_association '項目追加', f, :objective_details, class: 'btn btn-success',
+  data: {association_insertion_node: '#item-association-insertion-point',
+        assoiation_insertion_method: 'append'}
+  %>
+<% end %>
+</div>
+
+<table class="table table-list">
+<thead>
+  <tr>
+    <th>実行日</th>
+    <th>内容</th>
+    <th>達成数値</th>
+    <th>上長コメント</th>
+    <th>状態</th>
+    <th>承認</th>
+    <% if objective_detail_not_appv_and_self?(@objective) %>
+      <th></th>
+    <% end %>
+  </tr>
+</thead>
+
+<tbody id='item-association-insertion-point'>
+<div class="form-group">
+<%= f.fields_for :objective_details do |item| %>
+  <%= render 'objective_detail_fields', f: item %>
+<% end %>
+</div>
+</tbody>
+</table>
+</div>
+
+<div class="col-sm-6 btn-toolbar">
+<% if @objective.id.nil? %>
+  <%= link_to 'キャンセル', objectives_path, class: 'col-sm-2 btn btn-primary' %>
+<% else %>
+  <%= link_to 'キャンセル', objective_path(@objective), class: 'col-sm-2 btn btn-primary' %>
+<% end %>
+<%= f.submit '保存', class: 'col-sm-2 btn btn-primary'%>
+</div>
+
+</div>
+</div>
+<% end %>

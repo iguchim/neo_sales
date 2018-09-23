@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180828024837) do
+ActiveRecord::Schema.define(version: 20180911002130) do
 
   create_table "actions", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.string "name"
@@ -69,6 +69,49 @@ ActiveRecord::Schema.define(version: 20180828024837) do
     t.string "picture"
     t.index ["user_id", "created_at"], name: "index_microposts_on_user_id_and_created_at"
     t.index ["user_id"], name: "index_microposts_on_user_id"
+  end
+
+  create_table "notices", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=latin1" do |t|
+    t.text "contents"
+    t.string "link"
+    t.datetime "crate_date"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "objective_details", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+    t.bigint "objective_id"
+    t.datetime "exec_date"
+    t.text "contents"
+    t.decimal "amount", precision: 10, scale: 1
+    t.text "comment"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.string "state"
+    t.bigint "auth_id"
+    t.index ["auth_id"], name: "index_objective_details_on_auth_id"
+    t.index ["objective_id"], name: "index_objective_details_on_objective_id"
+  end
+
+  create_table "objectives", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+    t.bigint "user_id"
+    t.datetime "set_date"
+    t.string "overview"
+    t.text "details"
+    t.datetime "due_date"
+    t.text "goal"
+    t.decimal "goal_amount", precision: 10, scale: 1
+    t.decimal "current_amount", precision: 10, scale: 1
+    t.string "unit"
+    t.string "obj_state"
+    t.text "comment"
+    t.integer "points"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.string "state"
+    t.bigint "auth_id"
+    t.index ["auth_id"], name: "index_objectives_on_auth_id"
+    t.index ["user_id"], name: "index_objectives_on_user_id"
   end
 
   create_table "orders", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
@@ -176,6 +219,10 @@ ActiveRecord::Schema.define(version: 20180828024837) do
   add_foreign_key "daily_reports", "users", column: "auth_id"
   add_foreign_key "events", "users"
   add_foreign_key "microposts", "users"
+  add_foreign_key "objective_details", "objectives"
+  add_foreign_key "objective_details", "users", column: "auth_id"
+  add_foreign_key "objectives", "users"
+  add_foreign_key "objectives", "users", column: "auth_id"
   add_foreign_key "report_items", "reports"
   add_foreign_key "reports", "requests"
   add_foreign_key "reports", "users"
