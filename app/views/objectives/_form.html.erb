@@ -107,6 +107,15 @@
         </div>
       <% end %>
     </div>
+
+    <div class="col-sm-12">
+      <p class="col-sm-2" ><span class="label label-primary">減少目標</span></p>
+      <div  class="col-sm-1 form-check">
+        <%=f.check_box :reducing, :value => (f.object.reducing.nil? ? false : f.object.reducing), :readonly => read_only, class: 'form-control' %>
+      </div>
+
+    </div>
+
   </div>
 
 </div><!-- class="col-sm-6" -->

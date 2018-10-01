@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180911002130) do
+ActiveRecord::Schema.define(version: 20180930105638) do
 
   create_table "actions", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.string "name"
@@ -110,6 +110,7 @@ ActiveRecord::Schema.define(version: 20180911002130) do
     t.datetime "updated_at", null: false
     t.string "state"
     t.bigint "auth_id"
+    t.boolean "reducing"
     t.index ["auth_id"], name: "index_objectives_on_auth_id"
     t.index ["user_id"], name: "index_objectives_on_user_id"
   end

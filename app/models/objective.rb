@@ -1,5 +1,5 @@
 class Objective < ApplicationRecord
-  REGISTRABLE_ATTRIBUTES = %i(user_id auth_id state set_date overview details due_date goal goal_amount current_amount unit obj_state comment points)
+  REGISTRABLE_ATTRIBUTES = %i(user_id auth_id state set_date overview details due_date goal goal_amount current_amount unit obj_state comment points reducing)
   has_many :objective_details, dependent: :destroy
   belongs_to :user
 
@@ -12,7 +12,7 @@ class Objective < ApplicationRecord
   validates :due_date,  presence: true
   validates :goal,  presence: true
   validates :goal_amount, presence: true
-  validates :goal_amount, numericality: { greater_than: 0}
+  #validates :goal_amount, numericality: { greater_than: 0}
   validates :current_amount, numericality: true
   validates :unit,  presence: true
 

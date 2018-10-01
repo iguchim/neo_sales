@@ -10,12 +10,22 @@ module ObjectivesHelper
     else
       if obj.goal_amount.nil? || obj.current_amount.nil?
         str = "---"
-      elsif obj.goal_amount <= obj.current_amount
-        str = "達成"
-      elsif Date.parse(obj.due_date.to_s) < Date.today
-        str = "未達成"
-      else
-        str = "進行中"
+      elsif obj.reducing
+        if (obj.current_amount <= obj.goal_amount) && (Date.parse(obj.due_date.to_s) > Date.today)
+          str = "進行中"
+        elsif (obj.current_amount <= obj.goal_amount) && (Date.parse(obj.due_date.to_s) <= Date.today)
+          str = "達成"
+        else
+          str = "未達成"
+        end
+      else # increasing objective
+        if (obj.goal_amount <= obj.current_amount) && (Date.parse(obj.due_date.to_s) >= Date.today)
+          str = "達成"
+        elsif Date.parse(obj.due_date.to_s) < Date.today
+          str = "未達成"
+        else
+          str = "進行中"
+        end
       end
     end
     if obj.state != str
@@ -43,10 +53,28 @@ module ObjectivesHelper
       rate = 0
     elsif !obj.goal_amount.real? || !obj.current_amount.real?
       rate = 0
-    elsif obj.goal_amount == 0
-      rate = 0
-    else
-      rate = obj.current_amount/obj.goal_amount
+    elsif obj.reducing
+      if obj.goal_amount == 0
+        if  obj.current_amount > 0
+          rate = 0
+        else
+          rate =1
+        end
+      else
+        if obj.current_amount == 0
+          rate = 1
+        end
+        rate = obj.goal_amount/obj.current_amount
+        if rate > 1
+          rate = 1
+        end
+      end
+    else # increasing objective
+      if obj.goal_amount == 0
+        rate = 0
+      else
+        rate = obj.current_amount/obj.goal_amount
+      end
     end
     rate
   end
