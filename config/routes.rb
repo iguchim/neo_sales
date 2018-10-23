@@ -93,7 +93,9 @@ Rails.application.routes.draw do
     resources :objective_details
   end
 
-  resources :notices
+  resources :notices do
+    resources :notice_comments
+  end
   
   resources :account_activations, only: [:edit]
   resources :password_resets,     only: [:new, :create, :edit, :update]

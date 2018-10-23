@@ -1,0 +1,43 @@
+<h4 align="center">コメント編集</h4>
+
+<%= form_for(@notice_comment, url: path, method: method) do |f| %>
+<div class="container">
+<div class="row">
+
+<div class="col-sm-12">
+  <div class="form-group">
+
+    <div class="col-sm-12">
+      <p class="col-sm-1"><span class="label label-primary">氏名</span></p>
+      <div class="col-sm-2">
+        <% method == :put ? name = user_name(@notice_comment.user_id) : name = current_user.name %>
+        <%= text_field_tag '', '', :value => name, :readonly => true, class: 'form-control' %>
+      </div>
+
+      <p class="col-sm-1" ><span class="label label-primary">記入日</span></p>
+      <div class="col-sm-2">
+        <%= f.text_field :comment_date,  :value => (f.object.comment_date.strftime('%Y/%m/%d/%H/%M') unless f.object.comment_date.nil?), class: 'date-picker-date form-control' %>
+      </div>
+
+    </div>
+
+    <div class="col-sm-12">
+      <p class="col-sm-1" ><span class="label label-primary">コメント</span></p>
+      <div class="col-sm-10">
+        <%= f.text_area :comments,  :value => (f.object.comments unless f.object.comments.nil?), class: 'form-control' %>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div class="col-sm-6 btn-toolbar">
+  <%= link_to 'キャンセル', notice_path(params[:notice_id]), class: 'col-sm-3 btn btn-primary' %>
+  <%= f.submit '保存', class: 'col-sm-2 btn btn-primary'%>
+</div>
+
+</div>
+</div>
+
+<% end %>
+

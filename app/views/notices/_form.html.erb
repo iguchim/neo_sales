@@ -1,0 +1,90 @@
+<h4 align="center">情報編集</h4>
+
+<%= form_for(@notice, url: path, method: method) do |f| %>
+
+<div class="container">
+<div class="row">
+
+<div class="col-sm-12">
+
+  <div class="form-group">
+
+    <div class="col-sm-12">
+      <p class="col-sm-1"><span class="label label-primary">氏名</span></p>
+      <div class="col-sm-2">
+        <% method == :put ? name = user_name(@notice.user_id) : name = current_user.name %>
+        <%= text_field_tag '', '', :value => name, :readonly => true, class: 'form-control' %>
+      </div>
+
+      <p class="col-sm-1" ><span class="label label-primary">記入日</span></p>
+      <div class="col-sm-2">
+        <%= f.text_field :notice_date,  :value => (f.object.notice_date.strftime('%Y/%m/%d/%H/%M') unless f.object.notice_date.nil?), class: 'date-picker-date form-control' %>
+      </div>
+
+    </div>
+
+    <div class="col-sm-12">
+      <p class="col-sm-1" ><span class="label label-primary">内容</span></p>
+      <div class="col-sm-10">
+        <%= f.text_area :contents,  :value => (f.object.contents unless f.object.contents.nil?), class: 'form-control' %>
+      </div>
+    </div>
+
+    <div class="col-sm-12">
+      <p class="col-sm-1" ><span class="label label-primary">特記</span></p>
+      <div class="col-sm-8">
+        <%= f.text_area :notes,  :value => (f.object.notes unless f.object.notes.nil?), class: 'form-control' %>
+      </div>
+    </div>
+
+    <div class="col-sm-12">
+      <p class="col-sm-1" ><span class="label label-primary">開始</span></p>
+      <div class="col-sm-3">
+        <%= f.text_field :start_date,  :value => (f.object.start_date.strftime('%Y-%m-%d %H:%M') unless f.object.start_date.nil?), class: 'date-picker-noinit form-control' %>
+      </div>
+
+      <p class="col-sm-1" ><span class="label label-primary">終了</span></p>
+      <div class="col-sm-3">
+        <%= f.text_field :end_date,  :value => (f.object.end_date.strftime('%Y-%m-%d %H:%M') unless f.object.end_date.nil?), class: 'date-picker-noinit form-control' %>
+      </div>
+
+      <p class="col-sm-1" ><span class="label label-primary">終日イベント</span></p>
+        <div  class="col-sm-1 form-check">
+          <%=f.check_box :all_day, :value => (f.object.all_day.nil? ? false : f.object.all_day), class: 'form-control' %>
+      </div>
+    </div>
+
+    <div class="col-sm-12">
+      <p class="col-sm-1" ><span class="label label-primary">種別</span></p>
+      <div class="col-sm-2">
+        <%= f.collection_select :notice_category_id, NoticeCategory.all, :id, :name, :prompt => true, class: 'form-control' %>
+      </div>
+    </div>
+
+    <% if current_user.admin %>
+    <div class="col-sm-12">
+      <p class="col-sm-1" ><span class="label label-primary">通知先</span></p>
+      <div class="col-sm-2">
+        <%= f.select :notice_scope, [["全員", "全員"], ["管理者", "管理者"]], class: 'form-control' %>
+      </div>
+    <% else %>
+      <%= f.hidden_field :notice_scope, :value => "全員" %>
+    <% end %>
+    </div>
+
+  </div>
+</div>
+
+<div class="col-sm-6 btn-toolbar">
+<% if @notice.id.nil? %>
+  <%= link_to 'キャンセル', notices_path, class: 'col-sm-3 btn btn-primary' %>
+<% else %>
+  <%= link_to 'キャンセル', notice_path(@notice), class: 'col-sm-3 btn btn-primary' %>
+<% end %>
+<%= f.submit '保存', class: 'col-sm-2 btn btn-primary'%>
+</div>
+
+</div>
+</div>
+
+<% end %>

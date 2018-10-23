@@ -258,6 +258,64 @@ class UserMailer < ApplicationMailer
 
   end
   #============================== <<< Objective Detail ===
+  #=== Notice >>> =====================================
+  def info_to_admin
+    @user = User.find(params[:user_id])
+    admins = User.where(admin: true)
+    emails = []
+    admins.each do |admin|
+      emails << admin.email
+    end
+
+    @contents = params[:notice_contents]
+
+    @url = params[:url]
+    mail(to: emails, subject: '管理者向け情報です。')
+  end
+
+  def info_to_all
+    @user = User.find(params[:user_id])
+    all_users = User.all
+    emails = []
+    all_users.each do |user|
+      emails << user.email
+    end
+
+    @contents = params[:notice_contents]
+
+    @url = params[:url]
+    mail(to: emails, subject: '情報です。')
+  end
+  #===================================== <<< Notice ===
+   #=== Notice Comment >>> ============================
+  def comment_to_admin
+    @user = User.find(params[:user_id])
+    admins = User.where(admin: true)
+    emails = []
+    admins.each do |admin|
+      emails << admin.email
+    end
+
+    @comments = params[:notice_comments]
+
+    @url = params[:url]
+    mail(to: emails, subject: '管理者向け情報へのコメントです。')
+  end
+
+  def comment_to_all
+    @user = User.find(params[:user_id])
+    all_users = User.all
+    emails = []
+    all_users.each do |user|
+      emails << user.email
+    end
+
+    @comments = params[:notice_comments]
+
+    @url = params[:url]
+    mail(to: emails, subject: '情報へのコメントです。')
+  end
+  #=============================== <<< Notice Comment ===
   #-------------------------------------------------------
   def account_activation(user)
     @user = user

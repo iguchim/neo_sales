@@ -1,0 +1,119 @@
+<h4 align="center">情報詳細</h4>
+<div class="container">
+<div class="row">
+
+<% if false %>
+<div class="col-sm-12">
+  <div class="form-group">
+<% end %>
+
+    <div class="col-sm-12">
+      <p class="col-sm-1"><span class="label label-primary">発信</span></p>
+      <div class="col-sm-2 well well-sm">
+        <%= user_name(@notice.user_id) %>
+      </div>
+      <p class="col-sm-1" ><span class="label label-primary">記入日</span></p>
+      <div class="col-sm-2 well well-sm">
+        <%= @notice.notice_date.strftime('%Y/%m/%d') %>
+      </div>
+    </div>
+
+    <div class="col-sm-12">
+      <p class="col-sm-1" ><span class="label label-primary">種別</span></p>
+      <div class="col-sm-2 well well-sm">
+        <%= notice_category_name(@notice.notice_category_id) %>
+      </div>
+    </div>
+
+    <div class="col-sm-12">
+      <p class="col-sm-1" ><span class="label label-primary">内容</span></p>
+      <div class="col-sm-10 well">
+        <%= simple_format(@notice.contents) %>
+      </div>
+    </div>
+
+    <% if @notice.start_date %>
+      <div class="col-sm-12">
+      <% if @notice.end_date.nil? %>
+        <% @notice.all_day ? dstr = '日付' : dstr = '日時' %>
+        <p class="col-sm-1" ><span class="label label-primary"><%= dstr %></span></p>
+        <div class="col-sm-2 well well-sm">
+          <% if @notice.all_day %>
+            <%= @notice.start_date.strftime('%Y/%m/%d') %>
+          <% else %>
+            <%= @notice.start_date.strftime('%Y/%m/%d %H:%M') %>
+          <% end %>
+        </div>
+      <% else %>
+        <p class="col-sm-1" ><span class="label label-primary">開始</span></p>
+        <div class="col-sm-2 well well-sm">
+          <% if @notice.all_day %>
+            <%= @notice.start_date.strftime('%Y/%m/%d') %>
+          <% else %>
+            <%= @notice.start_date.strftime('%Y/%m/%d %H:%M') %>
+          <% end %>
+        </div>
+        <p class="col-sm-1" ><span class="label label-primary">終了</span></p>
+        <div class="col-sm-2 well well-sm">
+          <% if @notice.all_day %>
+            <%= @notice.end_date.strftime('%Y/%m/%d') %>
+          <% else %>
+            <%= @notice.end_date.strftime('%Y/%m/%d %H:%M') %>
+          <% end %>
+        </div>
+      <% end %>
+      </div>
+    <% end %>
+
+    <div class="col-sm-12">
+      <% if (@notice.user_id == current_user.id) %>
+        <%= link_to '編集', edit_notice_path(@notice), class: 'btn btn-primary' %>
+      <% end %>
+    </div>
+    
+      <h4 align="center">コメント</h4>
+
+      <table class="table table-striped">
+      <thead>
+        <tr>
+          <th class="col-sm-1">項番</th>
+          <th class="col-sm-2">日付</th>
+          <th class="col-sm-1">名前</th>
+          <th>コメント</th>
+          <th></th>
+        </tr>
+      </thead>
+      <% if !@notice_comments.nil? %>
+      <tbody>
+        <% @notice_comments.each do |comment| %>
+          <tr>
+            <% if comment.user_id == current_user.id %>
+              <td><%= link_to("#{comment.id}", edit_notice_notice_comment_path(@notice, comment, from: "index")) %></td>
+            <% else %>
+              <td><%= comment.id %></td>
+            <% end %>
+            <td><%= comment.comment_date.strftime('%Y/%m/%d') %></td>
+            <td><%= user_name(comment.user_id) %></td>
+            <td><%= simple_format(comment.comments) %></td>
+            <% if comment.user_id == current_user.id %>
+              <td><%= link_to '削除', notice_notice_comment_path(@notice, comment), method: :delete, data: {confirm: '本当に削除しますか？'}, class: 'btn btn-danger' %>
+            <% else %>
+              <td></td>
+            <% end %>
+          </tr>
+        <% end %>
+      </tbody>
+      <% end %>
+      </table>
+    
+    <%= link_to '情報共有', notices_path, class: 'btn btn-primary' %>
+
+    <%= link_to 'コメント', new_notice_notice_comment_path(notice_id: @notice.id), class: 'btn btn-primary' %>
+
+<% if false %>
+  </div>
+</div>
+<% end %>
+
+</div>
+</div>

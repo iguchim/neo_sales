@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180930105638) do
+ActiveRecord::Schema.define(version: 20181018035539) do
 
   create_table "actions", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.string "name"
@@ -71,12 +71,31 @@ ActiveRecord::Schema.define(version: 20180930105638) do
     t.index ["user_id"], name: "index_microposts_on_user_id"
   end
 
-  create_table "notices", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=latin1" do |t|
+  create_table "notice_categories", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+    t.string "name"
+  end
+
+  create_table "notice_comments", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+    t.datetime "comment_date"
+    t.text "comments"
+    t.bigint "notice_id"
+    t.bigint "user_id"
+    t.index ["notice_id"], name: "index_notice_comments_on_notice_id"
+    t.index ["user_id"], name: "index_notice_comments_on_user_id"
+  end
+
+  create_table "notices", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+    t.datetime "notice_date"
     t.text "contents"
-    t.string "link"
-    t.datetime "crate_date"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.text "notes"
+    t.bigint "notice_category_id"
+    t.datetime "start_date"
+    t.datetime "end_date"
+    t.bigint "user_id"
+    t.string "notice_scope"
+    t.boolean "all_day"
+    t.index ["notice_category_id"], name: "index_notices_on_notice_category_id"
+    t.index ["user_id"], name: "index_notices_on_user_id"
   end
 
   create_table "objective_details", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
