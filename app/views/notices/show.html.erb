@@ -32,6 +32,13 @@
       </div>
     </div>
 
+    <div class="col-sm-12">
+      <p class="col-sm-1" ><span class="label label-primary">特記</span></p>
+      <div class="col-sm-8 well">
+        <%= simple_format(@notice.notes) %>
+      </div>
+    </div>
+
     <% if @notice.start_date %>
       <div class="col-sm-12">
       <% if @notice.end_date.nil? %>
@@ -70,8 +77,6 @@
         <%= link_to '編集', edit_notice_path(@notice), class: 'btn btn-primary' %>
       <% end %>
     </div>
-    
-      <h4 align="center">コメント</h4>
 
       <table class="table table-striped">
       <thead>
